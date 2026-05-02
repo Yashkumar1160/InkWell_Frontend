@@ -1,0 +1,51 @@
+<div class="media-admin fade-in">
+  <header class="page-header">
+    <h1>Media Library</h1>
+    <p>View and manage all uploaded media assets.</p>
+  </header>
+
+  <div class="admin-actions-bar glass">
+    <div class="filters">
+      <button class="filter-btn" [class.active]="selectedType === 'ALL'" (click)="filterByType('ALL')">All</button>
+      <button class="filter-btn" [class.active]="selectedType === 'image/jpeg'" (click)="filterByType('image/jpeg')">JPEG</button>
+      <button class="filter-btn" [class.active]="selectedType === 'image/png'" (click)="filterByType('image/png')">PNG</button>
+      <button class="filter-btn deleted-filter" [class.active]="selectedType === 'DELETED'" (click)="filterByType('DELETED')">Trash</button>
+    </div>
+    <button class="btn-text" (click)="cleanup()">
+      <lucide-icon [name]="RefreshIcon" [size]="16"></lucide-icon> Cleanup Orphans
+    </button>
+  </div>
+
+  <div class="media-grid" *ngIf="mediaItems.length > 0; else emptyState">
+    <div *ngFor="let item of mediaItems" class="media-card glass" [class.is-deleted]="item.isDeleted">
+      <div class="media-preview">
+        <img [src]="item.url" [alt]="item.altText || item.fileName">
+      </div>
+      <div class="media-info">
+        <div class="media-info-details">
+          <span class="filename" [title]="item.fileName">{{ item.fileName }}</span>
+          <small class="alt-text" *ngIf="item.altText" title="Alt Text">{{ item.altText }}</small>
+        </div>
+        <div class="actions">
+          <button class="action-btn" (click)="editAltText(item)" title="Edit Alt Text">
+            <lucide-icon [name]="EditIcon"></lucide-icon>
+          </button>
+          <a [href]="item.url" target="_blank" class="action-btn" title="View Full">
+            <lucide-icon [name]="LinkIcon"></lucide-icon>
+          </a>
+          <button *ngIf="!item.isDeleted" class="action-btn delete" (click)="deleteMedia(item.mediaId)" title="Soft Delete">
+            <lucide-icon [name]="DeleteIcon"></lucide-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state glass">
+      <lucide-icon [name]="ImageIcon" class="empty-icon"></lucide-icon>
+      <h3>No media found</h3>
+      <p>Media assets will appear here once authors start uploading images.</p>
+    </div>
+  </ng-template>
+</div>

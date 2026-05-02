@@ -1,0 +1,61 @@
+<div class="admin-section">
+  <div class="section-header">
+    <div class="header-left">
+      <h2>Comment Management</h2>
+      <div class="moderation-badge" [class.active]="moderationEnabled" (click)="toggleModeration()">
+        Moderation: {{ moderationEnabled ? 'ON' : 'OFF' }}
+      </div>
+    </div>
+    <div class="filter-tabs">
+      <button [class.active]="statusFilter === 'APPROVED'" (click)="onStatusChange('APPROVED')">
+        Approved
+      </button>
+      <button [class.active]="statusFilter === 'PENDING'" (click)="onStatusChange('PENDING')">
+        Pending
+      </button>
+    </div>
+  </div>
+
+  <table class="data-table" *ngIf="filteredComments.length > 0; else empty">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Post ID</th>
+        <th>Author ID</th>
+        <th>Content</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let comment of filteredComments">
+        <td>{{ comment.commentId }}</td>
+        <td>{{ comment.postId }}</td>
+        <td>{{ comment.authorId }}</td>
+        <td>{{ comment.content | slice:0:80 }}...</td>
+        <td>
+          <span class="status-badge" [class]="comment.status.toLowerCase()">
+            {{ comment.status }}
+          </span>
+        </td>
+        <td class="actions">
+          <button *ngIf="comment.status === 'PENDING'"
+            class="btn-approve" (click)="approveComment(comment.commentId)">
+            Approve
+          </button>
+          <button *ngIf="comment.status === 'APPROVED'"
+            class="btn-reject" (click)="rejectComment(comment.commentId)">
+            Reject
+          </button>
+          <button class="btn-delete" (click)="deleteComment(comment.commentId)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #empty>
+    <p class="empty-msg">No comments found.</p>
+  </ng-template>
+</div>

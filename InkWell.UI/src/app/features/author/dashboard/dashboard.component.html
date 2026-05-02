@@ -1,0 +1,127 @@
+<div class="dashboard container fade-in">
+  <header class="dashboard-header">
+    <div>
+      <h1>Author Dashboard</h1>
+      <p>Manage your stories and track your performance.</p>
+    </div>
+    <button class="btn-primary" routerLink="/author/create">
+      <lucide-icon [name]="Plus"></lucide-icon> Write Story
+    </button>
+  </header>
+
+  <div class="stats-grid">
+    <div class="stat-card glass">
+      <div class="stat-icon"><lucide-icon [name]="FileText"></lucide-icon></div>
+      <div class="stat-info">
+        <span class="label">Total Posts</span>
+        <span class="value">{{posts.length}}</span>
+      </div>
+    </div>
+    <div class="stat-card glass">
+      <div class="stat-icon"><lucide-icon [name]="Eye"></lucide-icon></div>
+      <div class="stat-info">
+        <span class="label">Total Views</span>
+        <span class="value">{{getTotalViews()}}</span>
+      </div>
+    </div>
+    <div class="stat-card glass">
+      <div class="stat-icon"><lucide-icon [name]="Heart"></lucide-icon></div>
+      <div class="stat-info">
+        <span class="label">Total Likes</span>
+        <span class="value">{{getTotalLikes()}}</span>
+      </div>
+    </div>
+    <div class="stat-card glass">
+      <div class="stat-icon"><lucide-icon [name]="ImageIcon"></lucide-icon></div>
+      <div class="stat-info">
+        <span class="label">Total Media</span>
+        <span class="value">{{mediaCount}}</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="posts-section">
+    <div class="section-header">
+      <h2>My Stories</h2>
+      <div class="filters">
+        <button class="filter-btn" [class.active]="filterStatus === 'ALL'" (click)="setFilter('ALL')">All</button>
+        <button class="filter-btn" [class.active]="filterStatus === 'PUBLISHED'" (click)="setFilter('PUBLISHED')">Published</button>
+        <button class="filter-btn" [class.active]="filterStatus === 'DRAFT'" (click)="setFilter('DRAFT')">Drafts</button>
+      </div>
+    </div>
+
+    <div class="posts-table glass" *ngIf="getFilteredPosts().length > 0; else emptyState">
+      <table>
+        <thead>
+          <tr>
+            <th>Story</th>
+            <th>Status</th>
+            <th>Engagement</th>
+            <th>Last Updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let post of getFilteredPosts()">
+            <td>
+              <div class="post-info">
+                <span class="title">{{post.title}}</span>
+                <span class="slug">/post/{{post.slug}}</span>
+              </div>
+            </td>
+            <td>
+              <span class="status-badge" [class]="post.status.toLowerCase()">
+                {{post.status}}
+              </span>
+            </td>
+            <td>
+              <div class="engagement-stats">
+                <span class="view-stat" title="Views">
+                  <lucide-icon [name]="Eye"></lucide-icon> {{post.viewCount}}
+                </span>
+                <span class="like-stat" title="Likes">
+                  <lucide-icon [name]="Heart"></lucide-icon> {{post.likesCount}}
+                </span>
+              </div>
+            </td>
+            <td>{{post.createdAt | date:'shortDate'}}</td>
+            <td>
+              <div class="actions">
+              <a [routerLink]="['/post', post.slug]" class="icon-btn" title="View Public Post">
+                <lucide-icon [name]="ExternalLink"></lucide-icon>
+              </a>
+              <button class="icon-btn" [routerLink]="['/author/edit', post.postId]" title="Edit">
+                <lucide-icon [name]="Edit"></lucide-icon>
+              </button>
+                <button *ngIf="post.status === 'DRAFT'" class="icon-btn success" (click)="publishPost(post.postId)" title="Publish">
+                  <lucide-icon [name]="CheckCircle"></lucide-icon>
+                </button>
+                <button *ngIf="post.status === 'PUBLISHED'" class="icon-btn warning" (click)="unpublishPost(post.postId)" title="Unpublish">
+                  <lucide-icon [name]="Slash"></lucide-icon>
+                </button>
+                <button *ngIf="post.status === 'PUBLISHED'" class="icon-btn secondary" (click)="archivePost(post.postId)" title="Archive">
+                  <lucide-icon [name]="Archive"></lucide-icon>
+                </button>
+                <button *ngIf="post.status === 'ARCHIVED'" class="icon-btn secondary" (click)="unarchivePost(post.postId)" title="Restore to Draft">
+                  <lucide-icon [name]="RefreshCw"></lucide-icon>
+                </button>
+                <button class="icon-btn delete" (click)="deletePost(post.postId)" title="Delete">
+                  <lucide-icon [name]="Trash2"></lucide-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state glass">
+        <lucide-icon [name]="FileText" class="empty-icon"></lucide-icon>
+        <h3>No {{ filterStatus === 'ALL' ? '' : filterStatus.toLowerCase() }} stories yet</h3>
+        <p>Ready to share your insights? Start your first story today.</p>
+        <button class="btn-primary" routerLink="/author/create">Write your first story</button>
+      </div>
+    </ng-template>
+  </section>
+</div>

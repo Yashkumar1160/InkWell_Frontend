@@ -1,0 +1,157 @@
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.broadcast-section {
+  padding: 2rem;
+  border-radius: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.broadcast-section h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.broadcast-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.broadcast-form textarea {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-size: 1rem;
+  transition: all 0.2s;
+  outline: none;
+  min-height: 100px;
+  resize: vertical;
+}
+
+.broadcast-form textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  background: white;
+}
+
+.broadcast-form button {
+  align-self: flex-start;
+  padding: 0.75rem 2rem;
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.notification-card {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid var(--border);
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.notification-card:hover {
+  transform: scale(1.01);
+}
+
+.notification-card.unread {
+  border-left: 4px solid var(--primary);
+}
+
+.icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-box.info {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.icon-box.warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.icon-box.success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.icon-box.error {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.note-content {
+  flex: 1;
+}
+
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.note-header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.note-header .time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.note-content p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.btn-delete {
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.btn-delete:hover {
+  color: #ef4444;
+}
+
+.btn-delete lucide-icon {
+  width: 18px;
+}
+
+.empty-state {
+  padding: 5rem;
+  text-align: center;
+}
+
+.empty-state .empty-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--border);
+  margin-bottom: 1.5rem;
+}

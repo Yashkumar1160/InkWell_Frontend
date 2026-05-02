@@ -1,0 +1,46 @@
+<div class="home-container container fade-in">
+  <!-- Hero Section / Featured Post -->
+  <section class="hero" *ngIf="posts.length > 0">
+    <div class="featured-card" [routerLink]="['/post', posts[0].slug]">
+      <div class="card-image">
+        <img [src]="posts[0].featuredImageUrl || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=1000'" alt="Featured">
+        <div class="overlay"></div>
+      </div>
+      <div class="card-content">
+        <span class="badge">Featured</span>
+        <h1>{{posts[0].title}}</h1>
+        <p>{{posts[0].excerpt}}</p>
+        <div class="meta">
+          <span class="author">By {{featuredAuthor?.fullName || featuredAuthor?.username || 'Author #' + posts[0].authorId}}</span>
+          <span class="dot">·</span>
+          <span class="date">{{posts[0].publishedAt | date}}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Posts Grid -->
+  <section class="latest-posts">
+    <div class="section-header">
+      <h2>Latest Stories</h2>
+      <a routerLink="/explore" class="view-all">View all <lucide-icon [name]="ChevronRight" class="icon"></lucide-icon></a>
+    </div>
+
+    <div class="post-grid" *ngIf="!loading">
+      <app-post-card *ngFor="let post of posts" [post]="post"></app-post-card>
+    </div>
+  </section>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!loading && posts.length === 0">
+    <p>No posts found. Start writing today!</p>
+    <button routerLink="/author/create" class="btn-primary">Create Post</button>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+  </div>
+</div>

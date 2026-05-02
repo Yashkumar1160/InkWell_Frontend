@@ -1,0 +1,61 @@
+<div class="newsletter-page container fade-in">
+  <div class="newsletter-card glass">
+    <div class="icon-box">
+      <lucide-icon [name]="MailIcon"></lucide-icon>
+    </div>
+    <h1>Subscribe to our Newsletter</h1>
+    <p>Join 10,000+ readers and get the best stories delivered straight to your inbox every week.</p>
+
+    <form class="subscribe-form" #newsletterForm="ngForm" *ngIf="!subscribed" (ngSubmit)="onSubscribe()">
+      <div class="form-inputs">
+
+        <!-- Full Name -->
+        <div class="input-group">
+          <input
+            type="text"
+            [(ngModel)]="fullName"
+            name="fullName"
+            placeholder="Full Name"
+            required
+            minlength="2"
+            maxlength="100"
+            pattern="^[a-zA-Z\s]+"
+            #fullNameField="ngModel">
+          <div class="field-error" *ngIf="fullNameField.invalid && fullNameField.touched">
+            <span *ngIf="fullNameField.errors?.['required']">Full name is required.</span>
+            <span *ngIf="fullNameField.errors?.['minlength']">Minimum 2 characters required.</span>
+            <span *ngIf="fullNameField.errors?.['pattern']">Only letters and spaces allowed.</span>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="input-group">
+          <input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="Enter your email address"
+            required
+            email
+            #emailField="ngModel">
+          <div class="field-error" *ngIf="emailField.invalid && emailField.touched">
+            <span *ngIf="emailField.errors?.['required']">Email is required.</span>
+            <span *ngIf="emailField.errors?.['email']">Please enter a valid email address.</span>
+          </div>
+          <button type="submit" class="btn-primary" [disabled]="newsletterForm.invalid">
+            Subscribe <lucide-icon [name]="ArrowRightIcon"></lucide-icon>
+          </button>
+        </div>
+
+      </div>
+      <span class="hint">No spam, just quality content. Unsubscribe anytime.</span>
+    </form>
+
+    <div class="success-message" *ngIf="subscribed">
+      <lucide-icon [name]="CheckIcon"></lucide-icon>
+      <h2>You're on the list!</h2>
+      <p>Check your inbox to confirm your subscription.</p>
+      <button class="btn-primary" (click)="subscribed = false">Subscribe another email</button>
+    </div>
+  </div>
+</div>

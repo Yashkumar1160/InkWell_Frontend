@@ -1,0 +1,36 @@
+<div class="admin-container">
+  <aside class="sidebar glass">
+    <div class="sidebar-header">
+      <span class="logo">InkWell Admin</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+        <lucide-icon [name]="LayoutDashboard"></lucide-icon> Dashboard
+      </a>
+      <a routerLink="/admin/users" routerLinkActive="active" class="nav-item">
+        <lucide-icon [name]="Users"></lucide-icon> Users
+      </a>
+      <a routerLink="/admin/posts" routerLinkActive="active" class="nav-item">
+        <lucide-icon [name]="FileText"></lucide-icon> Posts
+      </a>
+      <a routerLink="/admin/comments" routerLinkActive="active" class="nav-item">
+        <lucide-icon [name]="MessageSquare"></lucide-icon> Comments
+      </a>
+      <a routerLink="/admin/taxonomy" routerLinkActive="active" class="nav-item">
+        <lucide-icon [name]="Tag"></lucide-icon> Taxonomy
+      </a>
+      <a routerLink="/admin/newsletter" routerLinkActive="active" class="nav-item">
+        <lucide-icon [name]="Mail"></lucide-icon> Newsletter
+      </a>
+      <a routerLink="/admin/media" routerLinkActive="active" class="nav-item">
+        <lucide-icon [name]="Image"></lucide-icon> Media
+      </a>
+      <a routerLink="/admin/notifications" routerLinkActive="active" class="nav-item">
+        <lucide-icon [name]="Bell"></lucide-icon> Notifications
+      </a>
+    </nav>
+  </aside>
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

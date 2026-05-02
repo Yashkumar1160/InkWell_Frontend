@@ -1,0 +1,61 @@
+<div class="newsletter-admin fade-in">
+  <header class="page-header">
+    <h1>Newsletter Subscribers</h1>
+    <div class="stats-pill">{{ subscribers.length }} Subscribers</div>
+  </header>
+
+  <section class="newsletter-composition glass">
+    <h2><lucide-icon [name]="SendIcon" [size]="18"></lucide-icon> Compose Newsletter</h2>
+    <div class="composition-form">
+      <div class="form-group">
+        <label>Subject</label>
+        <input type="text" [(ngModel)]="newsletterSubject" placeholder="Enter newsletter subject..." class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Body (HTML supported)</label>
+        <textarea [(ngModel)]="newsletterBody" placeholder="Enter newsletter content..." rows="4" class="form-control"></textarea>
+      </div>
+      <button 
+        class="btn-primary" 
+        [disabled]="!newsletterSubject.trim() || !newsletterBody.trim() || isSending"
+        (click)="sendNewsletter()"
+      >
+        {{ isSending ? 'Sending...' : 'Send to All Subscribers' }}
+      </button>
+    </div>
+  </section>
+
+  <div class="table-container glass">
+    <table>
+      <thead>
+        <tr>
+          <th>Subscriber</th>
+          <th>Status</th>
+          <th>Joined Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sub of subscribers">
+          <td>
+            <div class="sub-cell">
+              <lucide-icon [name]="MailIcon"></lucide-icon>
+              <span>{{ sub.email }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="status-badge" [class.active]="sub.status === 'SUBSCRIBED'">
+              {{ sub.status }}
+            </span>
+          </td>
+          <td>{{ sub.subscribedAt | date:'medium' }}</td>
+          <td>
+            <button class="action-btn delete" (click)="deleteSubscriber(sub.subscriberId)" title="Remove Subscriber">
+              <lucide-icon [name]="DeleteIcon"></lucide-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

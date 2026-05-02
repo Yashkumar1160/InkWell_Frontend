@@ -1,0 +1,42 @@
+<div class="explore-container container fade-in">
+  <header class="explore-header">
+    <h1>Explore Stories</h1>
+    <p>Discover the best of InkWell by topic and category.</p>
+    
+    <div class="search-bar glass">
+      <lucide-icon [name]="SearchIcon"></lucide-icon>
+      <input type="text" placeholder="Search topics, authors, or stories..." (input)="onSearch($event)">
+    </div>
+  </header>
+
+
+
+  <div class="trending-tags" *ngIf="trendingTags.length > 0">
+    <h3>Trending Tags</h3>
+    <div class="tags-list">
+      <span class="tag-pill" *ngFor="let tag of trendingTags">#{{tag.name}}</span>
+    </div>
+  </div>
+
+  <section class="results">
+    <div class="results-header">
+      <h2>{{ selectedFilter }}</h2>
+      <button class="btn-text" *ngIf="selectedFilter !== 'Trending Now'" (click)="loadPosts()">Clear Filter</button>
+    </div>
+
+    <div class="post-grid" *ngIf="!loading; else skeleton">
+      <app-post-card *ngFor="let post of posts" [post]="post"></app-post-card>
+      
+      <div class="no-results glass fade-in" *ngIf="posts.length === 0">
+        <lucide-icon [name]="SearchIcon"></lucide-icon>
+        <h3>No stories found</h3>
+        <p>We couldn't find any stories in this category yet. Why not be the first to write one?</p>
+        <button class="btn-primary" routerLink="/author/create">Write a Story</button>
+      </div>
+    </div>
+    
+    <ng-template #skeleton>
+       <div class="loading">Loading stories...</div>
+    </ng-template>
+  </section>
+</div>

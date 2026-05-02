@@ -1,0 +1,49 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a routerLink="/" class="logo">InkWell<span>.</span></a>
+        <p class="description">
+          Stories that matter. Insights that inspire. Join our community of writers and thinkers.
+        </p>
+        <div class="social-links">
+          <a href="#" class="social-btn"><lucide-icon [name]="Twitter"></lucide-icon></a>
+          <a href="#" class="social-btn"><lucide-icon [name]="Github"></lucide-icon></a>
+          <a href="#" class="social-btn"><lucide-icon [name]="Linkedin"></lucide-icon></a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h4>Platform</h4>
+        <ul>
+          <li><a routerLink="/explore">Explore</a></li>
+          <li><a routerLink="/newsletter">Newsletter</a></li>
+          <li><a routerLink="/author">Write</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-newsletter">
+        <h4>Subscribe</h4>
+        <p>Get the latest stories sent to your inbox.</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Email address">
+          <button class="btn-icon"><lucide-icon [name]="Mail"></lucide-icon></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2024 InkWell. All rights reserved.</p>
+      <p class="made-with">Made with <lucide-icon [name]="Heart" class="heart"></lucide-icon> for writers.</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,75 @@
+<div class="users-page fade-in">
+  <header class="page-header">
+    <h1>User Management</h1>
+    <div class="stats-pill">{{ filteredUsers.length }} Users</div>
+  </header>
+
+  <div class="controls-bar glass">
+    <div class="search-box">
+      <lucide-icon [name]="SearchIcon"></lucide-icon>
+      <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="filterUsers()" placeholder="Search by username or email...">
+    </div>
+    <div class="filter-box">
+      <lucide-icon [name]="FilterIcon"></lucide-icon>
+      <select [(ngModel)]="roleFilter" (change)="filterUsers()">
+        <option value="ALL">All Roles</option>
+        <option value="READER">Reader</option>
+        <option value="AUTHOR">Author</option>
+        <option value="ADMIN">Admin</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-container glass">
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Joined</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filteredUsers">
+          <td>
+            <div class="user-cell">
+              <img [src]="'https://ui-avatars.com/api/?name=' + user.username + '&background=random'" alt="Avatar">
+              <div class="info">
+                <span class="username">{{ user.username }}</span>
+                <span class="email">{{ user.email }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <select [ngModel]="user.role" (ngModelChange)="changeRole(user.userId, $event)" class="role-select">
+              <option value="READER">READER</option>
+              <option value="AUTHOR">AUTHOR</option>
+              <option value="ADMIN">ADMIN</option>
+            </select>
+          </td>
+          <td>
+            <span class="status-badge" [class.active]="user.isActive">
+              {{ user.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td>{{ user.createdAt | date:'mediumDate' }}</td>
+          <td>
+            <div class="actions">
+              <button *ngIf="user.isActive" class="action-btn deactivate" (click)="deactivateUser(user.userId)" title="Deactivate">
+                <lucide-icon [name]="DeactivateIcon"></lucide-icon>
+              </button>
+              <button *ngIf="!user.isActive" class="action-btn reactivate" (click)="reactivateUser(user.userId)" title="Reactivate">
+                <lucide-icon [name]="ReactivateIcon"></lucide-icon>
+              </button>
+              <button class="action-btn delete" (click)="deleteUser(user.userId)" title="Delete">
+                <lucide-icon [name]="DeleteIcon"></lucide-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

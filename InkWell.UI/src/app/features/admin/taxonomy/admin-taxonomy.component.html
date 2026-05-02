@@ -1,0 +1,65 @@
+<div class="taxonomy-admin fade-in">
+  <header class="page-header">
+    <h1>Taxonomy Management</h1>
+    <p>Manage categories and tags used across the platform.</p>
+  </header>
+
+  <div class="grid-2">
+    <!-- Categories Section -->
+    <section class="tax-section glass">
+      <div class="section-header">
+        <div class="title-group">
+          <lucide-icon [name]="FolderIcon"></lucide-icon>
+          <h2>Categories</h2>
+        </div>
+        <div class="add-box-vertical">
+          <input type="text" [(ngModel)]="newCategory" placeholder="New Category Name...">
+          <select [(ngModel)]="selectedParentId" class="parent-select">
+            <option [ngValue]="undefined">No Parent (Top Level)</option>
+            <option *ngFor="let parent of categories" [ngValue]="parent.categoryId">{{parent.name}}</option>
+          </select>
+          <button class="btn-primary" (click)="addCategory()">Add Category</button>
+        </div>
+      </div>
+      <div class="tax-list">
+        <div *ngFor="let cat of categories" class="tax-item">
+          <div *ngIf="editingCategory?.categoryId === cat.categoryId" class="edit-mode">
+            <input type="text" [(ngModel)]="editingCategory.name">
+            <button class="btn-save" (click)="saveEdit()">Save</button>
+            <button class="btn-cancel" (click)="editingCategory = null">Cancel</button>
+          </div>
+          <div *ngIf="editingCategory?.categoryId !== cat.categoryId" class="view-mode">
+            <span [class.child-cat]="cat.parentCategoryId">
+              <span *ngIf="cat.parentCategoryId">↳</span> {{ cat.name }} 
+              <small class="count">({{cat.postCount}} posts)</small>
+            </span>
+            <div class="actions">
+              <button class="btn-edit" (click)="startEdit(cat)">Edit</button>
+              <button class="btn-delete" (click)="deleteCategory(cat.categoryId)"><lucide-icon [name]="DeleteIcon"></lucide-icon></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tags Section -->
+    <section class="tax-section glass">
+      <div class="section-header">
+        <div class="title-group">
+          <lucide-icon [name]="TagIcon"></lucide-icon>
+          <h2>Tags</h2>
+        </div>
+        <div class="add-box">
+          <input type="text" [(ngModel)]="newTag" placeholder="New Tag...">
+          <button class="btn-icon-plus" (click)="addTag()"><lucide-icon [name]="PlusIcon"></lucide-icon></button>
+        </div>
+      </div>
+      <div class="tax-list">
+        <div *ngFor="let tag of tags" class="tax-item">
+          <span>#{{ tag.name }}</span>
+          <button class="btn-delete" (click)="deleteTag(tag.tagId)"><lucide-icon [name]="DeleteIcon"></lucide-icon></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

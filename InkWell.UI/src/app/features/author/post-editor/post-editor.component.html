@@ -1,0 +1,75 @@
+<div class="editor-container container fade-in">
+  <header class="editor-header">
+    <h1>{{ isEditMode ? 'Edit Post' : 'Create New Post' }}</h1>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="navigateBack()">Cancel</button>
+      <button class="btn-primary" [disabled]="postForm.invalid || isSubmitting" (click)="savePost('DRAFT')">
+        Save Draft
+      </button>
+      <button class="btn-success" [disabled]="postForm.invalid || isSubmitting" (click)="savePost('PUBLISHED')">
+        {{ isEditMode ? 'Update & Publish' : 'Publish Now' }}
+      </button>
+    </div>
+  </header>
+
+  <form [formGroup]="postForm" class="post-form">
+    <div class="main-content">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" formControlName="title" placeholder="Enter a catchy title..." class="form-control title-input">
+      </div>
+
+      <div class="form-group">
+        <label>Content</label>
+        <div id="editor-container">
+          <div id="editor" style="height: 500px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="form-group">
+        <label for="excerpt">Excerpt</label>
+        <textarea id="excerpt" formControlName="excerpt" rows="4" placeholder="Brief summary of your post..." class="form-control"></textarea>
+        <small class="char-count">{{ postForm.get('excerpt')?.value?.length || 0 }}/300</small>
+      </div>
+
+      <div class="form-group">
+        <label for="featuredImageUrl">Featured Image</label>
+        <div class="input-with-upload">
+          <input type="text" id="featuredImageUrl" formControlName="featuredImageUrl" placeholder="https://..." class="form-control">
+          <button type="button" class="btn-upload" (click)="fileInput.click()">Upload</button>
+          <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none" accept="image/*">
+        </div>
+        <div class="image-preview" *ngIf="postForm.get('featuredImageUrl')?.value">
+          <img [src]="postForm.get('featuredImageUrl')?.value" alt="Preview">
+          <button type="button" class="btn-remove-image" (click)="removeImage()">Remove Image</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Categories</label>
+        <div class="categories-list">
+          <label *ngFor="let cat of categories" class="checkbox-label">
+            <input type="checkbox" [checked]="selectedCategories.includes(cat.categoryId)" (change)="toggleCategory(cat.categoryId)">
+            {{ cat.name }}
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="tags">Tags</label>
+        <div class="tag-chips">
+          <span *ngFor="let tag of currentTags" class="tag-chip">
+            #{{ tag }}
+            <button type="button" class="remove-tag" (click)="removeTag(tag)">&times;</button>
+          </span>
+        </div>
+        <input type="text" id="tags" formControlName="tagInput" 
+               placeholder="Type a tag and press Enter" 
+               class="form-control"
+               (keyup.enter)="addTag($event)">
+      </div>
+    </aside>
+  </form>
+</div>

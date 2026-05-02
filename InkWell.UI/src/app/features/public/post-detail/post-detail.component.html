@@ -1,0 +1,70 @@
+<article class="post-detail container fade-in" *ngIf="post">
+  <header class="post-header">
+    <a routerLink="/" class="back-link">
+      <lucide-icon [name]="ArrowIcon"></lucide-icon> Back to home
+    </a>
+    <div class="categories" *ngIf="categories.length > 0">
+      <div class="category-badge" *ngFor="let cat of categories">
+        <lucide-icon [name]="FolderIcon" size="14"></lucide-icon>
+        {{cat.name}}
+      </div>
+    </div>
+    <h1>{{post.title}}</h1>
+    <p class="excerpt">{{post.excerpt}}</p>
+    
+    <div class="author-meta">
+      <div class="author-info">
+        <img [src]="author?.avatarUrl || 'https://ui-avatars.com/api/?name=' + (author?.fullName || 'Author') + '&background=random'" alt="Author">
+        <div>
+          <span class="name">{{author?.fullName || author?.username || 'Author #' + post.authorId}}</span>
+          <span class="date">{{post.publishedAt | date:'mediumDate'}} · {{post.readTimeMinutes}} min read</span>
+        </div>
+      </div>
+      <div class="social-share">
+        <button class="icon-btn" (click)="likePost()"><lucide-icon [name]="HeartIcon"></lucide-icon> {{post.likesCount}}</button>
+        <button class="icon-btn"><lucide-icon [name]="ShareIcon"></lucide-icon></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="featured-image">
+    <img [src]="post.featuredImageUrl || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=1000'" alt="Featured">
+  </div>
+
+  <div class="post-content" [innerHTML]="post.content"></div>
+
+  <footer class="post-footer">
+    <div class="tags" *ngIf="tags.length > 0">
+      <span class="tag" *ngFor="let tag of tags">
+        <lucide-icon [name]="TagIcon" size="14"></lucide-icon>
+        #{{tag.name}}
+      </span>
+    </div>
+    <hr>
+    <div class="engagement">
+      <h3>Enjoyed this story?</h3>
+      <p>Give it a like or share it with your network.</p>
+      <div class="actions">
+         <button class="btn-primary like-btn" [class.liked]="post.isLiked" (click)="likePost()">
+           <lucide-icon [name]="HeartIcon"></lucide-icon> 
+           {{ post.likesCount > 0 ? post.likesCount : '' }} {{ post.isLiked ? 'Liked' : 'Like' }}{{ post.likesCount !== 1 ? 's' : '' }}
+         </button>
+         <button class="btn-secondary" (click)="scrollToComments()">
+           <lucide-icon [name]="MessageCircleIcon"></lucide-icon> Comments
+         </button>
+      </div>
+    </div>
+  </footer>
+
+  <app-comment-section
+    [postId]="post.postId"
+    [isLoggedIn]="isLoggedIn"
+    [postAuthorId]="post.authorId">
+  </app-comment-section>
+</article>
+
+<div class="loading-state container" *ngIf="loading">
+   <div class="skeleton-header"></div>
+   <div class="skeleton-image"></div>
+   <div class="skeleton-content"></div>
+</div>

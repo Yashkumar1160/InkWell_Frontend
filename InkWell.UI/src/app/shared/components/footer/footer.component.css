@@ -1,0 +1,179 @@
+.footer {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 5rem 0 2rem;
+  margin-top: 5rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 2fr;
+  gap: 4rem;
+  margin-bottom: 4rem;
+}
+
+.footer-brand .logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.footer-brand .logo span {
+  color: var(--primary);
+}
+
+.footer-brand .description {
+  margin-top: 1.25rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 300px;
+}
+
+.footer-brand .social-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.footer-brand .social-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--bg-main);
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.footer-brand .social-btn:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.footer-brand .social-btn lucide-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.footer-links h4 {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-main);
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.75rem;
+}
+
+.footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: var(--primary);
+}
+
+.footer-newsletter h4 {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-main);
+}
+
+.footer-newsletter p {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.footer-newsletter .newsletter-form {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--bg-main);
+  padding: 0.375rem;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+}
+
+.footer-newsletter .newsletter-form input {
+  background: none;
+  border: none;
+  outline: none;
+  padding: 0.5rem 1rem;
+  flex-grow: 1;
+  font-size: 0.875rem;
+  color: var(--text-main);
+}
+
+.footer-newsletter .newsletter-form .btn-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.footer-newsletter .newsletter-form .btn-icon:hover {
+  background: var(--primary-hover);
+}
+
+.footer-newsletter .newsletter-form .btn-icon lucide-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.footer-bottom {
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.footer-bottom .made-with {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.footer-bottom .made-with .heart {
+  width: 14px;
+  height: 14px;
+  color: #ef4444;
+  fill: #ef4444;
+}
+
+@media (max-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+}

@@ -1,0 +1,42 @@
+<div class="notifications-container container fade-in">
+  <header class="notifications-header">
+    <h1>Notifications</h1>
+    <div class="header-actions">
+      <button class="btn-text danger" (click)="deleteAllRead()" *ngIf="notifications.length > unreadCount">
+        <lucide-icon [name]="ClearIcon" [size]="16"></lucide-icon> Clear read
+      </button>
+      <button class="btn-text" (click)="markAllAsRead()" *ngIf="unreadCount > 0">
+        Mark all as read
+      </button>
+    </div>
+  </header>
+
+  <div class="notifications-list glass" *ngIf="!loading && notifications.length > 0; else emptyState">
+    <div *ngFor="let note of notifications" class="notification-item" [class.unread]="!note.isRead" (click)="handleNotificationClick(note)">
+      <div class="icon-wrapper" [class]="getCategoryClass(note.type)">
+        <lucide-icon [name]="getIcon(note.type)"></lucide-icon>
+      </div>
+      <div class="note-content">
+        <span class="note-title">{{ note.title }}</span>
+        <p class="note-message">{{ note.message }}</p>
+        <span class="note-date">{{ note.createdAt | date:'medium' }}</span>
+      </div>
+      <div class="unread-dot" *ngIf="!note.isRead"></div>
+      <button class="delete-btn" (click)="deleteNotification(note.notificationId, $event)" title="Delete notification">
+        <lucide-icon [name]="TrashIcon" [size]="16"></lucide-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <div class="skeleton-note" *ngFor="let i of [1,2,3,4]"></div>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state glass" *ngIf="!loading">
+      <lucide-icon [name]="BellIcon" class="empty-icon"></lucide-icon>
+      <h3>All caught up!</h3>
+      <p>No new notifications at the moment.</p>
+    </div>
+  </ng-template>
+</div>

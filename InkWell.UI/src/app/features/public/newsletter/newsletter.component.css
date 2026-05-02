@@ -1,0 +1,84 @@
+.newsletter-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.newsletter-card {
+  max-width: 600px;
+  padding: 4rem;
+  border-radius: 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.icon-box {
+  width: 80px;
+  height: 80px;
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary);
+  border-radius: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 2rem;
+}
+
+.icon-box lucide-icon {
+  width: 40px;
+  height: 40px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+}
+
+.form-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.input-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+  border-color: var(--primary);
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.success-message lucide-icon {
+  width: 60px;
+  height: 60px;
+  color: #10b981;
+  margin-bottom: 1.5rem;
+}
+
+.success-message h2 {
+  margin-bottom: 1rem;
+}

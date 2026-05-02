@@ -1,0 +1,87 @@
+<nav class="navbar">
+  <div class="container">
+    <div class="nav-left">
+      <a routerLink="/" class="logo">
+        <span class="logo-text">InkWell</span>
+        <span class="logo-dot">.</span>
+      </a>
+
+      <div class="nav-links">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+        <a routerLink="/explore">Explore</a>
+        <a routerLink="/newsletter">Newsletter</a>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <div class="search-box">
+        <lucide-icon [name]="Search" class="search-icon"></lucide-icon>
+        <input type="text" placeholder="Search posts..." (keyup.enter)="onSearch($event)">
+      </div>
+
+      <ng-container *ngIf="authService.currentUser$ | async as user; else guestActions">
+        <div class="action-buttons">
+          <button *ngIf="user.role === 'AUTHOR' || user.role === 'ADMIN'" routerLink="/author/create" class="btn-write">
+            <lucide-icon [name]="PenSquare" class="icon"></lucide-icon>
+            <span>Write</span>
+          </button>
+          
+          <button class="icon-btn" routerLink="/notifications">
+            <lucide-icon [name]="Bell"></lucide-icon>
+            <span class="badge" *ngIf="unreadCount > 0">{{unreadCount}}</span>
+          </button>
+
+          <div class="user-menu" (click)="toggleDropdown()">
+            <div class="avatar">
+              <img [src]="user.avatarUrl || 'https://ui-avatars.com/api/?name=' + user.username" alt="User">
+            </div>
+            <div class="dropdown" [class.show]="showDropdown">
+              <div class="user-info">
+                <p class="name">{{user.fullName || user.username}}</p>
+                <p class="role">{{user.role}}</p>
+              </div>
+              <hr>
+              <!-- Mobile Only Links -->
+              <div class="mobile-nav-links">
+                <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                  <lucide-icon [name]="Home" class="icon"></lucide-icon> Home
+                </a>
+                <a routerLink="/explore">
+                  <lucide-icon [name]="Compass" class="icon"></lucide-icon> Explore
+                </a>
+                <a routerLink="/newsletter">
+                  <lucide-icon [name]="Mail" class="icon"></lucide-icon> Newsletter
+                </a>
+                <hr>
+              </div>
+              <a routerLink="/profile">
+                <lucide-icon [name]="User" class="icon"></lucide-icon> Profile
+              </a>
+              <a *ngIf="user.role === 'ADMIN'" routerLink="/admin">
+                <lucide-icon [name]="Settings" class="icon"></lucide-icon> Admin Panel
+              </a>
+              <a *ngIf="user.role === 'AUTHOR' || user.role === 'ADMIN'" routerLink="/author">
+                <lucide-icon [name]="Layout" class="icon"></lucide-icon> Dashboard
+              </a>
+              <hr>
+              <button (click)="logout()" class="logout-btn">
+                <lucide-icon [name]="LogOut" class="icon"></lucide-icon> Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #guestActions>
+        <div class="guest-actions">
+          <a routerLink="/login" class="link-login">Sign In</a>
+          <a routerLink="/register" class="btn-signup">Get Started</a>
+        </div>
+      </ng-template>
+
+      <button class="mobile-menu-btn" (click)="toggleDropdown()">
+        <lucide-icon [name]="Menu"></lucide-icon>
+      </button>
+    </div>
+  </div>
+</nav>

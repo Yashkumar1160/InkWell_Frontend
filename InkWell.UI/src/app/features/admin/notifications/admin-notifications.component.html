@@ -1,0 +1,48 @@
+<div class="notifications-admin fade-in">
+  <header class="page-header">
+    <h1>System Notifications</h1>
+    <p>Monitor platform alerts and automated logs.</p>
+  </header>
+
+  <section class="broadcast-section glass">
+    <h2><lucide-icon [name]="SendIcon" [size]="18"></lucide-icon> Send System Broadcast</h2>
+    <div class="broadcast-form">
+      <textarea 
+        [(ngModel)]="broadcastMessage" 
+        placeholder="Type a message to send to all users..."
+        rows="2"
+      ></textarea>
+      <button 
+        class="btn-primary" 
+        [disabled]="!broadcastMessage.trim() || isBroadcasting"
+        (click)="sendBroadcast()"
+      >
+        {{ isBroadcasting ? 'Sending...' : 'Broadcast to All' }}
+      </button>
+    </div>
+  </section>
+
+  <div class="notifications-list">
+    <div *ngFor="let note of notifications" class="notification-card glass" [class.unread]="!note.isRead">
+      <div class="icon-box" [ngClass]="note.type">
+        <lucide-icon [name]="getIcon(note.type)"></lucide-icon>
+      </div>
+      <div class="note-content">
+        <div class="note-header">
+          <h3>{{ note.title }}</h3>
+          <span class="time">{{ note.createdAt | date:'short' }}</span>
+        </div>
+        <p>{{ note.message }}</p>
+      </div>
+      <button class="btn-delete" title="Dismiss" (click)="deleteNote(note.id)">
+        <lucide-icon [name]="DeleteIcon"></lucide-icon>
+      </button>
+    </div>
+
+    <div *ngIf="notifications.length === 0" class="empty-state glass">
+      <lucide-icon [name]="BellIcon" class="empty-icon"></lucide-icon>
+      <h3>All clear!</h3>
+      <p>No new system alerts at this time.</p>
+    </div>
+  </div>
+</div>

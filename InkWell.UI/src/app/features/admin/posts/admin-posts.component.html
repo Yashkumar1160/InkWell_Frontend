@@ -1,0 +1,74 @@
+<div class="posts-admin fade-in">
+  <header class="page-header">
+    <h1>All Posts</h1>
+    <p>Moderate and manage content across the platform.</p>
+  </header>
+
+  <div class="admin-filters glass">
+    <button class="filter-btn" [class.active]="selectedStatus === 'ALL'" (click)="filterByStatus('ALL')">All Posts</button>
+    <button class="filter-btn" [class.active]="selectedStatus === 'PUBLISHED'" (click)="filterByStatus('PUBLISHED')">Published</button>
+    <button class="filter-btn" [class.active]="selectedStatus === 'DRAFT'" (click)="filterByStatus('DRAFT')">Drafts</button>
+    <button class="filter-btn" [class.active]="selectedStatus === 'ARCHIVED'" (click)="filterByStatus('ARCHIVED')">Archived</button>
+  </div>
+
+  <div class="table-container glass">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let post of posts">
+          <td>
+            <div class="title-cell">
+              <lucide-icon [name]="PostIcon"></lucide-icon>
+              <span class="title" [title]="post.title">{{ post.title }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="author-cell">
+              <lucide-icon [name]="UserIcon"></lucide-icon>
+              <span>{{ post.authorName || 'Unknown' }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="status-badge" [class.published]="post.status === 'PUBLISHED'">
+              {{ post.status }}
+            </span>
+          </td>
+          <td>{{ post.createdAt | date:'shortDate' }}</td>
+          <td>
+            <div class="actions">
+              <a [routerLink]="['/post', post.slug]" class="action-btn" title="View Public Post">
+                <lucide-icon [name]="ViewIcon"></lucide-icon>
+              </a>
+              <a [routerLink]="['/author/edit', post.postId]" class="action-btn" title="Edit Post">
+                <lucide-icon [name]="EditIcon"></lucide-icon>
+              </a>
+              <button *ngIf="post.status === 'PUBLISHED'" class="action-btn" (click)="unpublish(post.postId)" title="Unpublish">
+                <lucide-icon [name]="HideIcon"></lucide-icon>
+              </button>
+              <button *ngIf="post.status === 'DRAFT'" class="action-btn" (click)="publish(post.postId)" title="Publish">
+                <lucide-icon [name]="ShowIcon"></lucide-icon>
+              </button>
+              <button *ngIf="post.status === 'PUBLISHED' && !post.isFeatured" class="action-btn" (click)="featurePost(post.postId)" title="Feature Post">
+                <lucide-icon [name]="StarIcon"></lucide-icon>
+              </button>
+              <button *ngIf="post.isFeatured" class="action-btn featured" (click)="unfeaturePost(post.postId)" title="Unfeature Post">
+                <lucide-icon [name]="StarIcon" style="fill: currentColor;"></lucide-icon>
+              </button>
+              <button class="action-btn delete" (click)="deletePost(post.postId)" title="Delete Permanently">
+                <lucide-icon [name]="DeleteIcon"></lucide-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

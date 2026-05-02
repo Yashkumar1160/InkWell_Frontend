@@ -1,0 +1,35 @@
+<div class="dashboard fade-in">
+  <h1>Admin Dashboard</h1>
+  <p class="subtitle">Platform overview and quick stats.</p>
+
+  <div class="stats-grid">
+    <div class="stat-card glass">
+      <div class="stat-icon users"><lucide-icon [name]="UsersIcon"></lucide-icon></div>
+      <div class="stat-info">
+        <span class="label">Total Users</span>
+        <span class="value">{{stats.users}}</span>
+      </div>
+    </div>
+    <div class="stat-card glass">
+      <div class="stat-icon posts"><lucide-icon [name]="PostsIcon"></lucide-icon></div>
+      <div class="stat-info">
+        <span class="label">Total Posts</span>
+        <span class="value">{{stats.posts}}</span>
+      </div>
+    </div>
+    <div class="stat-card glass">
+      <div class="stat-icon newsletter"><lucide-icon [name]="NewsletterIcon"></lucide-icon></div>
+      <div class="stat-info">
+        <span class="label">Subscribers</span>
+        <span class="value">{{stats.subscribers}}</span>
+      </div>
+    </div>
+    <div class="stat-card glass">
+      <div class="stat-icon media"><lucide-icon [name]="MediaIcon"></lucide-icon></div>
+      <div class="stat-info">
+        <span class="label">Media Assets</span>
+        <span class="value">{{stats.media}}</span>
+      </div>
+    </div>
+  </div>
+</div>

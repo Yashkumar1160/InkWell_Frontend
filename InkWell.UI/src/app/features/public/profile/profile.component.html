@@ -1,0 +1,114 @@
+<div class="profile-container container fade-in" *ngIf="user">
+  <header class="profile-header">
+    <h1>Account Settings</h1>
+    <p>Manage your public profile and account preferences.</p>
+  </header>
+
+  <div class="profile-grid">
+    <aside class="profile-sidebar glass">
+      <div class="avatar-section">
+        <img [src]="'https://ui-avatars.com/api/?name=' + user.username + '&size=120&background=random'" alt="Avatar">
+        <button class="btn-text">Change Photo</button>
+      </div>
+      <nav class="settings-nav">
+        <button class="nav-btn" [class.active]="activeTab === 'profile'" (click)="activeTab = 'profile'">Public Profile</button>
+        <button class="nav-btn" [class.active]="activeTab === 'security'" (click)="activeTab = 'security'">Security</button>
+        <button class="nav-btn" [class.active]="activeTab === 'notifications'" (click)="activeTab = 'notifications'">Notifications</button>
+      </nav>
+    </aside>
+
+    <main class="profile-main glass">
+      <!-- Profile Tab -->
+      <div *ngIf="activeTab === 'profile'">
+        <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+          <section class="form-section">
+            <h3>Personal Information</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Username</label>
+                <input type="text" [value]="user.username" class="form-control" readonly>
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" [value]="user.email" class="form-control" readonly>
+              </div>
+              <div class="form-group full-width">
+                <label>Full Name</label>
+                <input type="text" formControlName="fullName" class="form-control" placeholder="John Doe">
+              </div>
+              <div class="form-group full-width">
+                <label>Bio</label>
+                <textarea formControlName="bio" class="form-control" rows="4" placeholder="Tell us about yourself..."></textarea>
+              </div>
+            </div>
+          </section>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" [disabled]="profileForm.invalid || isSaving">
+              {{ isSaving ? 'Saving Changes...' : 'Save Changes' }}
+            </button>
+          </div>
+        </form>
+
+        <section class="user-posts-section" *ngIf="authorPosts.length > 0">
+          <h3>My Published Posts</h3>
+          <div class="posts-list">
+            <div *ngFor="let post of authorPosts" class="post-preview-card glass">
+              <div class="post-info">
+                <h4>{{post.title}}</h4>
+                <p class="post-meta">
+                  <span>{{post.createdAt | date:'mediumDate'}}</span> • 
+                  <span>{{post.viewCount}} views</span> • 
+                  <span>{{post.likesCount}} likes</span>
+                </p>
+              </div>
+              <a [routerLink]="['/post', post.slug]" class="btn-text">View Post</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Security Tab -->
+      <div *ngIf="activeTab === 'security'">
+        <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+          <section class="form-section">
+            <h3>Update Password</h3>
+            <div class="form-group">
+              <label>Current Password</label>
+              <input type="password" formControlName="currentPassword" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" formControlName="newPassword" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Confirm New Password</label>
+              <input type="password" formControlName="confirmPassword" class="form-control">
+            </div>
+          </section>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" [disabled]="passwordForm.invalid || isSaving">
+              {{ isSaving ? 'Updating...' : 'Update Password' }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Notifications Tab -->
+      <div *ngIf="activeTab === 'notifications'">
+        <section class="form-section">
+          <h3>Newsletter Preferences</h3>
+          <p>How often would you like to receive updates from InkWell?</p>
+          <div class="notifications-settings">
+            <div class="freq-options">
+               <button class="btn-outline" (click)="updateNewsletterPrefs('DAILY')">Daily Digest</button>
+               <button class="btn-outline" (click)="updateNewsletterPrefs('WEEKLY')">Weekly Roundup</button>
+               <button class="btn-outline" (click)="updateNewsletterPrefs('MONTHLY')">Monthly Highlights</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
