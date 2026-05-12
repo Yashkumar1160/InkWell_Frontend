@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PostService, Post } from '../../../core/services/post.service';
 import { MediaService } from '../../../core/services/media.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { LucideAngularModule, Plus, FileText, Eye, Heart, Edit, Trash2, CheckCircle, Slash, ExternalLink, Archive, RefreshCw, Image } from 'lucide-angular';
 
 @Component({
@@ -16,6 +17,8 @@ export class DashboardComponent implements OnInit {
   posts: Post[] = [];
   filterStatus: 'ALL' | 'PUBLISHED' | 'DRAFT' = 'ALL';
   mediaCount = 0;
+  totalPosts = 0;
+  myFiles: any[] = [];
 
   readonly Archive = Archive;
   readonly RefreshCw = RefreshCw;
@@ -30,11 +33,17 @@ export class DashboardComponent implements OnInit {
   readonly ExternalLink = ExternalLink;
   readonly ImageIcon = Image;
 
-  constructor(private postService: PostService, private mediaService: MediaService) { }
+  constructor(
+    private postService: PostService, 
+    private mediaService: MediaService,
+    private authService: AuthService
+  ) { }
 
   ngOnInit() {
     this.loadPosts();
     this.loadMediaCount();
+    this.loadPostCount();
+    this.loadMyFiles();
   }
 
   loadPosts() {
@@ -49,6 +58,21 @@ export class DashboardComponent implements OnInit {
       next: (res) => this.mediaCount = res.count,
       error: (err) => console.error(err)
     });
+  }
+
+  loadPostCount() {
+    this.authService.currentUser$.subscribe(user => {
+      if (user?.userId) {
+        this.postService.getPostCount(user.userId).subscribe({
+          next: (res) => this.totalPosts = res.count,
+          error: (err) => console.error(err)
+        });
+      }
+    });
+  }
+
+  loadMyFiles() {
+    this.mediaService.getMyFiles().subscribe(files => this.myFiles = files);
   }
   
   archivePost(id: number) {

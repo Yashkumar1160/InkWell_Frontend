@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { LucideAngularModule, Bell, MessageSquare, Heart, UserPlus, Check, Info, Trash2, XCircle } from 'lucide-angular';
+import { LucideAngularModule, Bell, MessageSquare, Heart, UserPlus, Check, Info, Trash2, XCircle, Eye } from 'lucide-angular';
 import { NotificationService } from '../../../core/services/notification.service';
+import { CommentService } from '../../../core/services/comment.service';
 import { Notification } from '../../../core/models/notification.model';
 
 @Component({
@@ -15,12 +16,16 @@ import { Notification } from '../../../core/models/notification.model';
 export class NotificationsComponent implements OnInit {
   notifications: Notification[] = [];
   loading = true;
+  showUnreadOnly = false;
+
   readonly BellIcon = Bell;
   readonly TrashIcon = Trash2;
   readonly ClearIcon = XCircle;
+  readonly UnreadIcon = Eye;
 
   constructor(
     private notificationService: NotificationService,
+    private commentService: CommentService,
     private router: Router
   ) { }
 
@@ -34,13 +39,23 @@ export class NotificationsComponent implements OnInit {
 
   loadNotifications() {
     this.loading = true;
-    this.notificationService.getNotifications().subscribe({
-      next: (data) => {
-        this.notifications = data;
-        this.loading = false;
-      },
-      error: () => this.loading = false
-    });
+    if (this.showUnreadOnly) {
+      // Uses GET /unread endpoint
+      this.notificationService.getUnreadNotifications().subscribe({
+        next: (data) => { this.notifications = data; this.loading = false; },
+        error: () => this.loading = false
+      });
+    } else {
+      this.notificationService.getNotifications().subscribe({
+        next: (data) => { this.notifications = data; this.loading = false; },
+        error: () => this.loading = false
+      });
+    }
+  }
+
+  toggleUnreadFilter() {
+    this.showUnreadOnly = !this.showUnreadOnly;
+    this.loadNotifications();
   }
 
   getCategoryClass(type: string) {
@@ -62,23 +77,24 @@ export class NotificationsComponent implements OnInit {
       this.notificationService.markAsRead(note.notificationId).subscribe();
       note.isRead = true;
     }
-
-    // Logic to navigate to related content
     if (note.relatedType === 'Post' && note.relatedId) {
-      // We need to find the slug if possible, but for now we might need to fetch it
-      // or navigate by ID if supported. Let's assume we can navigate to detail.
       this.router.navigate(['/post', note.relatedId]);
+    } else if (note.type.includes('COMMENT') && note.relatedId) {
+      this.commentService.getCommentById(note.relatedId).subscribe(comment => {
+        this.router.navigate(['/post', comment.postId]);
+      });
     }
   }
 
   markAllAsRead() {
     this.notificationService.markAllAsRead().subscribe(() => {
       this.notifications.forEach(n => n.isRead = true);
+      if (this.showUnreadOnly) this.notifications = [];
     });
   }
 
   deleteNotification(id: number, event: Event): void {
-    event.stopPropagation();  // prevent triggering handleNotificationClick
+    event.stopPropagation();
     this.notificationService.deleteNotification(id).subscribe(() => {
       this.notifications = this.notifications.filter(n => n.notificationId !== id);
     });
@@ -90,3 +106,4 @@ export class NotificationsComponent implements OnInit {
     });
   }
 }
+

@@ -1,5 +1,117 @@
-.page-header {
-  margin-bottom: 2rem;
+.page-header { margin-bottom: 2rem; }
+
+/* Filter Row */
+.filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.type-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 2rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.filter-btn.active          { background: var(--primary); color: white; border-color: var(--primary); }
+.filter-btn.like-btn.active { background: #f43f5e; border-color: #f43f5e; }
+.filter-btn.comment-btn.active, .filter-btn.reply-btn.active { background: #6366f1; border-color: #6366f1; }
+.filter-btn.broadcast-btn.active { background: #f59e0b; border-color: #f59e0b; }
+
+.related-search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.75rem;
+}
+
+.search-icon { color: var(--text-muted); }
+
+.search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-main);
+  font-size: 0.875rem;
+  width: 180px;
+}
+
+.btn-search {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.3rem 0.75rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.btn-clear {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.search-error {
+  color: #ef4444;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.type-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.25rem;
+  background: rgba(255,255,255,0.1);
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.meta {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.skeleton-card {
+  height: 80px;
+  background: var(--bg-card);
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 
 .broadcast-section {

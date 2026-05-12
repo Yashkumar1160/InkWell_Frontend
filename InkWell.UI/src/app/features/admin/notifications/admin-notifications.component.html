@@ -1,9 +1,10 @@
 <div class="notifications-admin fade-in">
   <header class="page-header">
     <h1>System Notifications</h1>
-    <p>Monitor platform alerts and automated logs.</p>
+    <p>Monitor platform alerts, automated logs, and send broadcasts.</p>
   </header>
 
+  <!-- Broadcast Section -->
   <section class="broadcast-section glass">
     <h2><lucide-icon [name]="SendIcon" [size]="18"></lucide-icon> Send System Broadcast</h2>
     <div class="broadcast-form">
@@ -22,19 +23,56 @@
     </div>
   </section>
 
-  <div class="notifications-list">
+  <!-- Type Filters + Related ID Search -->
+  <div class="filter-row glass">
+    <div class="type-filters">
+      <button class="filter-btn" [class.active]="selectedType === 'ALL'" (click)="filterByType('ALL')">All</button>
+      <button class="filter-btn like-btn" [class.active]="selectedType === 'LIKE'" (click)="filterByType('LIKE')">
+        <lucide-icon [name]="HeartIcon" [size]="13"></lucide-icon> Likes
+      </button>
+      <button class="filter-btn comment-btn" [class.active]="selectedType === 'NEW_COMMENT'" (click)="filterByType('NEW_COMMENT')">
+        <lucide-icon [name]="CommentIcon" [size]="13"></lucide-icon> Comments
+      </button>
+      <button class="filter-btn reply-btn" [class.active]="selectedType === 'COMMENT_REPLY'" (click)="filterByType('COMMENT_REPLY')">
+        <lucide-icon [name]="CommentIcon" [size]="13"></lucide-icon> Replies
+      </button>
+      <button class="filter-btn broadcast-btn" [class.active]="selectedType === 'BROADCAST'" (click)="filterByType('BROADCAST')">
+        <lucide-icon [name]="BellIcon" [size]="13"></lucide-icon> Broadcasts
+      </button>
+    </div>
+
+    <div class="related-search">
+      <lucide-icon [name]="SearchIcon" [size]="16" class="search-icon"></lucide-icon>
+      <input 
+        type="number" 
+        [(ngModel)]="relatedIdSearch" 
+        placeholder="Search by Post/Comment ID..."
+        class="search-input"
+        (keyup.enter)="searchByRelatedId()"
+      >
+      <button class="btn-search" (click)="searchByRelatedId()">Find</button>
+      <button class="btn-clear" *ngIf="relatedIdSearch" (click)="loadNotifications()">✕</button>
+    </div>
+  </div>
+
+  <p class="search-error" *ngIf="searchError">{{ searchError }}</p>
+
+  <!-- Notifications List -->
+  <div class="notifications-list" *ngIf="!loading; else loadingState">
     <div *ngFor="let note of notifications" class="notification-card glass" [class.unread]="!note.isRead">
-      <div class="icon-box" [ngClass]="note.type">
+      <div class="icon-box" [ngClass]="note.type?.toLowerCase()">
         <lucide-icon [name]="getIcon(note.type)"></lucide-icon>
       </div>
       <div class="note-content">
         <div class="note-header">
           <h3>{{ note.title }}</h3>
+          <span class="type-badge">{{ note.type }}</span>
           <span class="time">{{ note.createdAt | date:'short' }}</span>
         </div>
         <p>{{ note.message }}</p>
+        <small class="meta">Recipient #{{ note.recipientId }} · Related: {{ note.relatedType }} #{{ note.relatedId }}</small>
       </div>
-      <button class="btn-delete" title="Dismiss" (click)="deleteNote(note.id)">
+      <button class="btn-delete" title="Dismiss" (click)="deleteNote(note.notificationId)">
         <lucide-icon [name]="DeleteIcon"></lucide-icon>
       </button>
     </div>
@@ -42,7 +80,13 @@
     <div *ngIf="notifications.length === 0" class="empty-state glass">
       <lucide-icon [name]="BellIcon" class="empty-icon"></lucide-icon>
       <h3>All clear!</h3>
-      <p>No new system alerts at this time.</p>
+      <p>No notifications found for this filter.</p>
     </div>
   </div>
+
+  <ng-template #loadingState>
+    <div class="loading-state">
+      <div class="skeleton-card" *ngFor="let i of [1,2,3]"></div>
+    </div>
+  </ng-template>
 </div>

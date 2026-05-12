@@ -112,6 +112,9 @@ export class AdminService {
   deleteSubscriber(id: number): Observable<any> {
     return this.http.delete(`${this.newsletterApi}/delete/${id}`);
   }
+  getSubscriberByEmail(email: string): Observable<any> {
+    return this.http.get<any>(`${this.newsletterApi}/by-email?email=${encodeURIComponent(email)}`);
+  }
 
   // Posts
   getPostsByStatus(status: string): Observable<any[]> {
@@ -122,7 +125,7 @@ export class AdminService {
   getAllNotifications(): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiUrl}/api/notification/all`);
   }
-  broadcastNotification(dto: { recipientIds: number[], message: string, type: string }): Observable<any> {
+  broadcastNotification(dto: { recipientIds: number[], title?: string, message: string, roleFilter?: string }): Observable<any> {
     return this.http.post(`${environment.apiUrl}/api/notification/broadcast`, dto);
   }
 

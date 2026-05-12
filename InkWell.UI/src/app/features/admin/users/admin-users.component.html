@@ -7,7 +7,13 @@
   <div class="controls-bar glass">
     <div class="search-box">
       <lucide-icon [name]="SearchIcon"></lucide-icon>
-      <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="filterUsers()" placeholder="Search by username or email...">
+      <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="filterUsers()" [placeholder]="searchByEmail ? 'Enter exact email...' : 'Search by username or email...'">
+    </div>
+    <div class="search-toggle">
+      <label class="toggle-container">
+        <input type="checkbox" [(ngModel)]="searchByEmail" (change)="filterUsers()">
+        <span class="toggle-label">Exact Email</span>
+      </label>
     </div>
     <div class="filter-box">
       <lucide-icon [name]="FilterIcon"></lucide-icon>

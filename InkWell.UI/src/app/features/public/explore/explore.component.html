@@ -11,10 +11,30 @@
 
 
 
-  <div class="trending-tags" *ngIf="trendingTags.length > 0">
-    <h3>Trending Tags</h3>
-    <div class="tags-list">
-      <span class="tag-pill" *ngFor="let tag of trendingTags">#{{tag.name}}</span>
+  <div class="taxonomy-bar">
+    <div class="categories-section" *ngIf="categories.length > 0">
+      <h3>Categories</h3>
+      <div class="category-list">
+        <span class="category-chip glass" *ngFor="let cat of categories" (click)="filterByCategory(cat.slug)">
+          {{cat.name}}
+        </span>
+      </div>
+    </div>
+
+    <div class="sub-categories" *ngIf="subCategories.length > 0">
+      <h3>Sub-Categories</h3>
+      <div class="category-list">
+        <span class="category-chip sub glass" *ngFor="let sub of subCategories" (click)="filterByCategory(sub.slug)">
+          {{sub.name}}
+        </span>
+      </div>
+    </div>
+
+    <div class="trending-tags" *ngIf="trendingTags.length > 0">
+      <h3>Trending Tags</h3>
+      <div class="tags-list">
+        <span class="tag-pill" *ngFor="let tag of trendingTags" (click)="filterByTag(tag.slug)">#{{tag.name}}</span>
+      </div>
     </div>
   </div>
 
@@ -29,14 +49,14 @@
       
       <div class="no-results glass fade-in" *ngIf="posts.length === 0">
         <lucide-icon [name]="SearchIcon"></lucide-icon>
-        <h3>No stories found</h3>
-        <p>We couldn't find any stories in this category yet. Why not be the first to write one?</p>
-        <button class="btn-primary" routerLink="/author/create">Write a Story</button>
+          <h3>No stories found</h3>
+          <p>We couldn't find any stories in this category yet. Why not be the first to write one?</p>
+          <button class="btn-primary" routerLink="/author/create">Write a Story</button>
+        </div>
       </div>
-    </div>
-    
-    <ng-template #skeleton>
-       <div class="loading">Loading stories...</div>
-    </ng-template>
-  </section>
-</div>
+      
+      <ng-template #skeleton>
+        <div class="loading">Loading stories...</div>
+      </ng-template>
+    </section>
+  </div>

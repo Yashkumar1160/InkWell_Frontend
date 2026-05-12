@@ -13,8 +13,8 @@ export class NewsletterService {
 
   constructor(private http: HttpClient) {}
 
-  subscribe(email: string, fullName: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/subscribe`, { email, fullName });
+  subscribe(email: string, fullName: string, userId?: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/subscribe`, { email, fullName, userId });
   }
 
   confirmSubscription(token: string): Observable<any> {

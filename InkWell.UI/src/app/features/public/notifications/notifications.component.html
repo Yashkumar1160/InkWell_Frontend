@@ -1,8 +1,15 @@
 <div class="notifications-container container fade-in">
   <header class="notifications-header">
-    <h1>Notifications</h1>
+    <div>
+      <h1>Notifications</h1>
+      <span class="unread-count-label" *ngIf="unreadCount > 0">{{ unreadCount }} unread</span>
+    </div>
     <div class="header-actions">
-      <button class="btn-text danger" (click)="deleteAllRead()" *ngIf="notifications.length > unreadCount">
+      <button class="btn-filter" [class.active]="showUnreadOnly" (click)="toggleUnreadFilter()">
+        <lucide-icon [name]="UnreadIcon" [size]="16"></lucide-icon>
+        {{ showUnreadOnly ? 'Showing Unread' : 'Show Unread Only' }}
+      </button>
+      <button class="btn-text danger" (click)="deleteAllRead()" *ngIf="!showUnreadOnly && notifications.length > unreadCount">
         <lucide-icon [name]="ClearIcon" [size]="16"></lucide-icon> Clear read
       </button>
       <button class="btn-text" (click)="markAllAsRead()" *ngIf="unreadCount > 0">

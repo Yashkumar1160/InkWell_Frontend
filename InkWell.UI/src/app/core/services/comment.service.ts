@@ -57,4 +57,8 @@ export class CommentService {
   updateComment(id: number, content: string): Observable<CommentResponseDTO> {
     return this.http.put<CommentResponseDTO>(`${this.apiUrl}/update/${id}`, { content });
   }
+
+  getCommentById(id: number): Observable<CommentResponseDTO> {
+    return this.http.get<CommentResponseDTO>(`${this.apiUrl}/${id}`);
+  }
 }

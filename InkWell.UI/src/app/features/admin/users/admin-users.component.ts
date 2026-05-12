@@ -16,6 +16,7 @@ export class AdminUsersComponent implements OnInit {
   filteredUsers: any[] = [];
   searchTerm: string = '';
   roleFilter: string = 'ALL';
+  searchByEmail: boolean = false;
 
   readonly SearchIcon = Search;
   readonly FilterIcon = Filter;
@@ -38,11 +39,20 @@ export class AdminUsersComponent implements OnInit {
 
   filterUsers(): void {
     if (this.searchTerm.trim()) {
-      this.adminService.searchUsers(this.searchTerm).subscribe(users => {
-        this.filteredUsers = this.roleFilter === 'ALL' 
-          ? users 
-          : users.filter(u => u.role === this.roleFilter);
-      });
+      if (this.searchByEmail) {
+        this.adminService.getUserByEmail(this.searchTerm).subscribe({
+          next: (user) => {
+            this.filteredUsers = user ? [user] : [];
+          },
+          error: () => this.filteredUsers = []
+        });
+      } else {
+        this.adminService.searchUsers(this.searchTerm).subscribe(users => {
+          this.filteredUsers = this.roleFilter === 'ALL' 
+            ? users 
+            : users.filter(u => u.role === this.roleFilter);
+        });
+      }
     } else if (this.roleFilter !== 'ALL') {
       this.adminService.getUsersByRole(this.roleFilter).subscribe(users => {
         this.filteredUsers = users;

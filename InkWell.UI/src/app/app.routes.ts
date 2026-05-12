@@ -4,6 +4,7 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { ExploreComponent } from './features/public/explore/explore.component';
 import { NewsletterComponent } from './features/public/newsletter/newsletter.component';
+import { NewsletterActionComponent } from './features/public/newsletter-action/newsletter-action.component';
 import { PostDetailComponent } from './features/public/post-detail/post-detail.component';
 import { DashboardComponent as AuthorDashboard } from './features/author/dashboard/dashboard.component';
 
@@ -19,6 +20,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'explore', component: ExploreComponent },
   { path: 'newsletter', component: NewsletterComponent },
+  { path: 'newsletter/:action/:token', component: NewsletterActionComponent },
   { path: 'post/:slug', component: PostDetailComponent },
   { 
     path: 'author', 

@@ -35,13 +35,14 @@ export class NewsletterComponent {
 
   onSubscribe() {
     if (this.email && this.fullName) {
-      this.newsletterService.subscribe(this.email, this.fullName).subscribe({
+      const userId = this.authService.currentUserValue?.userId;
+      this.newsletterService.subscribe(this.email, this.fullName, userId).subscribe({
         next: () => {
           this.subscribed = true;
         },
         error: (err: any) => {
           console.error('Subscription failed', err);
-          alert('Subscription failed. Please check your details.');
+          alert(err.error?.message || 'Subscription failed. Please check your details.');
         }
       });
     }

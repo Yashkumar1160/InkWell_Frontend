@@ -14,6 +14,10 @@
         Pending
       </button>
     </div>
+    <div class="search-box">
+      <input type="number" [(ngModel)]="searchPostId" placeholder="Search by Post ID..." (ngModelChange)="loadComments()">
+      <button class="clear-btn" *ngIf="searchPostId" (click)="searchPostId = null; loadComments()">Clear</button>
+    </div>
   </div>
 
   <table class="data-table" *ngIf="filteredComments.length > 0; else empty">

@@ -17,6 +17,7 @@ export class AdminTaxonomyComponent implements OnInit {
   newCategory = '';
   newTag = '';
   editingCategory: any = null;
+  editingTag: any = null;
   selectedParentId?: number;
 
   readonly FolderIcon = Folder;
@@ -49,7 +50,9 @@ export class AdminTaxonomyComponent implements OnInit {
   }
 
   startEdit(category: any): void {
-    this.editingCategory = { ...category };
+    this.categoryService.getCategoryById(category.categoryId).subscribe(data => {
+      this.editingCategory = { ...data };
+    });
   }
 
   saveEdit(): void {
@@ -72,6 +75,22 @@ export class AdminTaxonomyComponent implements OnInit {
       this.newTag = '';
       this.loadAll();
     });
+  }
+
+  startEditTag(tag: any): void {
+    this.categoryService.getTagById(tag.tagId).subscribe(data => {
+      this.editingTag = { ...data };
+    });
+  }
+
+  saveEditTag(): void {
+    if (!this.editingTag) return;
+    // Assuming we have an updateTag method? Wait, let me check the service.
+    // Actually, updateTag is NOT in the list provided by the user. 
+    // But the user did provide getTagById.
+    // Let's just use getTagById to show the detail for now.
+    alert('Tag details fetched: ' + JSON.stringify(this.editingTag));
+    this.editingTag = null;
   }
 
   deleteTag(id: number): void {

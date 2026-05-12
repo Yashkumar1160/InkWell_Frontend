@@ -1,0 +1,36 @@
+<div class="newsletter-action-container fade-in">
+  <div class="action-card glass">
+    
+    <div *ngIf="status === 'LOADING'" class="loading-state">
+      <div class="spinner"></div>
+      <h2>Processing...</h2>
+      <p>Please wait while we update your subscription.</p>
+    </div>
+
+    <div *ngIf="status === 'ERROR'" class="error-state">
+      <h2>Oops!</h2>
+      <p class="error-msg">{{ message }}</p>
+      <button class="btn-primary" routerLink="/">Return Home</button>
+    </div>
+
+    <div *ngIf="status === 'SUCCESS' && action !== 'preferences'" class="success-state">
+      <h2>Success!</h2>
+      <p class="success-msg">{{ message }}</p>
+      <button class="btn-primary" routerLink="/">Return Home</button>
+    </div>
+
+    <div *ngIf="status === 'SUCCESS' && action === 'preferences'" class="preferences-state">
+      <h2>Manage Preferences</h2>
+      <p>{{ message }}</p>
+      
+      <div class="form-group">
+        <label for="prefs">What kind of emails do you want to receive?</label>
+        <input type="text" id="prefs" [(ngModel)]="preferences" placeholder="e.g. tech, lifestyle, updates" class="form-control">
+        <small>Comma-separated categories you are interested in.</small>
+      </div>
+
+      <button class="btn-primary" (click)="savePreferences()">Save Preferences</button>
+    </div>
+
+  </div>
+</div>

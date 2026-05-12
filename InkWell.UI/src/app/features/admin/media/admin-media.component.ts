@@ -76,4 +76,10 @@ export class AdminMediaComponent implements OnInit {
       });
     }
   }
+
+  viewDetails(id: number): void {
+    this.mediaService.getById(id).subscribe(item => {
+      alert(`Media Details:\n\nName: ${item.fileName}\nType: ${item.mimeType}\nSize: ${item.sizeKb} KB\nPost ID: ${item.linkedPostId || 'Not linked'}`);
+    });
+  }
 }

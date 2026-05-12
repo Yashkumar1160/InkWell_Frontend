@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AdminService } from '../../../core/services/admin.service';
-import { LucideAngularModule, MessageSquare, Trash2, Check, X } from 'lucide-angular';
+import { CommentService } from '../../../core/services/comment.service';
+import { LucideAngularModule, MessageSquare, Trash2, Check, X, Search } from 'lucide-angular';
 
 @Component({
   selector: 'app-admin-comments',
@@ -16,13 +18,19 @@ export class AdminCommentsComponent implements OnInit {
   filteredComments: any[] = [];
   statusFilter: string = 'PENDING';
   moderationEnabled = false;
+  searchPostId: number | null = null;
 
   readonly CommentIcon = MessageSquare;
   readonly DeleteIcon = Trash2;
   readonly ApproveIcon = Check;
   readonly RejectIcon = X;
+  readonly SearchIcon = Search;
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private commentService: CommentService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadComments();
@@ -40,6 +48,14 @@ export class AdminCommentsComponent implements OnInit {
   }
 
   loadComments(): void {
+    if (this.searchPostId) {
+      this.commentService.getByPost(this.searchPostId).subscribe(data => {
+        this.comments = data;
+        this.filteredComments = data;
+      });
+      return;
+    }
+
     // load based on selected status filter
     if (this.statusFilter === 'PENDING') {
       this.adminService.getPendingComments().subscribe(data => {

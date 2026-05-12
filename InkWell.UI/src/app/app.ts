@@ -17,9 +17,21 @@ export class AppComponent {
 
   constructor(private authService: AuthService) {
     if (this.authService.isLoggedIn()) {
-      this.authService.fetchCurrentUser().subscribe({
-        error: () => console.warn('Could not refresh user profile on startup')
-      });
+      const token = this.authService.getToken();
+      if (token) {
+        this.authService.validateToken(token).subscribe({
+          next: (res) => {
+            if (res.valid) {
+              this.authService.fetchCurrentUser().subscribe({
+                error: () => console.warn('Could not refresh user profile on startup')
+              });
+            } else {
+              this.authService.logout();
+            }
+          },
+          error: () => this.authService.logout()
+        });
+      }
     }
   }
 }

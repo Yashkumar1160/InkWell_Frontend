@@ -1,9 +1,58 @@
 <div class="newsletter-admin fade-in">
   <header class="page-header">
     <h1>Newsletter Subscribers</h1>
-    <div class="stats-pill">{{ subscribers.length }} Subscribers</div>
+    <div class="stats-pill">{{ subscribers.length }} Shown</div>
   </header>
 
+  <!-- Email Search Bar -->
+  <div class="search-bar glass">
+    <div class="search-input-wrap">
+      <lucide-icon [name]="SearchIcon" [size]="18" class="search-icon"></lucide-icon>
+      <input 
+        type="email" 
+        [(ngModel)]="searchEmail" 
+        placeholder="Search subscriber by email..." 
+        class="search-input"
+        (keyup.enter)="searchByEmail()"
+      >
+      <button class="btn-search" (click)="searchByEmail()" [disabled]="isSearching || !searchEmail.trim()">
+        {{ isSearching ? '...' : 'Search' }}
+      </button>
+      <button class="btn-clear" *ngIf="searchEmail" (click)="clearSearch()" title="Clear">✕</button>
+    </div>
+
+    <div class="search-result" *ngIf="searchResult">
+      <div class="search-result-card">
+        <lucide-icon [name]="MailIcon"></lucide-icon>
+        <span class="email">{{ searchResult.email }}</span>
+        <span class="status-badge" [class]="searchResult.status?.toLowerCase()">{{ searchResult.status }}</span>
+        <span class="date">Joined: {{ searchResult.subscribedAt | date:'shortDate' }}</span>
+        <button class="action-btn delete" (click)="deleteSubscriber(searchResult.subscriberId)" title="Remove">
+          <lucide-icon [name]="DeleteIcon"></lucide-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="search-error" *ngIf="searchError">{{ searchError }}</div>
+  </div>
+
+  <!-- Status Filter Tabs -->
+  <div class="status-filters glass">
+    <button class="filter-btn" [class.active]="selectedStatus === 'ALL'" (click)="filterByStatus('ALL')">
+      <lucide-icon [name]="AllIcon" [size]="14"></lucide-icon> All
+    </button>
+    <button class="filter-btn active-btn" [class.active]="selectedStatus === 'ACTIVE'" (click)="filterByStatus('ACTIVE')">
+      <lucide-icon [name]="ActiveIcon" [size]="14"></lucide-icon> Active
+    </button>
+    <button class="filter-btn pending-btn" [class.active]="selectedStatus === 'PENDING'" (click)="filterByStatus('PENDING')">
+      <lucide-icon [name]="PendingIcon" [size]="14"></lucide-icon> Pending
+    </button>
+    <button class="filter-btn unsub-btn" [class.active]="selectedStatus === 'UNSUBSCRIBED'" (click)="filterByStatus('UNSUBSCRIBED')">
+      <lucide-icon [name]="DeleteIcon" [size]="14"></lucide-icon> Unsubscribed
+    </button>
+  </div>
+
+  <!-- Compose Newsletter -->
   <section class="newsletter-composition glass">
     <h2><lucide-icon [name]="SendIcon" [size]="18"></lucide-icon> Compose Newsletter</h2>
     <div class="composition-form">
@@ -20,11 +69,12 @@
         [disabled]="!newsletterSubject.trim() || !newsletterBody.trim() || isSending"
         (click)="sendNewsletter()"
       >
-        {{ isSending ? 'Sending...' : 'Send to All Subscribers' }}
+        {{ isSending ? 'Sending...' : 'Send to All Active Subscribers' }}
       </button>
     </div>
   </section>
 
+  <!-- Subscribers Table -->
   <div class="table-container glass">
     <table>
       <thead>
@@ -40,20 +90,26 @@
           <td>
             <div class="sub-cell">
               <lucide-icon [name]="MailIcon"></lucide-icon>
-              <span>{{ sub.email }}</span>
+              <div>
+                <span class="name">{{ sub.fullName }}</span>
+                <span class="email-sub">{{ sub.email }}</span>
+              </div>
             </div>
           </td>
           <td>
-            <span class="status-badge" [class.active]="sub.status === 'SUBSCRIBED'">
+            <span class="status-badge" [class]="sub.status?.toLowerCase()">
               {{ sub.status }}
             </span>
           </td>
-          <td>{{ sub.subscribedAt | date:'medium' }}</td>
+          <td>{{ sub.subscribedAt | date:'mediumDate' }}</td>
           <td>
             <button class="action-btn delete" (click)="deleteSubscriber(sub.subscriberId)" title="Remove Subscriber">
               <lucide-icon [name]="DeleteIcon"></lucide-icon>
             </button>
           </td>
+        </tr>
+        <tr *ngIf="subscribers.length === 0">
+          <td colspan="4" class="empty-row">No subscribers found for this filter.</td>
         </tr>
       </tbody>
     </table>

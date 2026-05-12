@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5032'
+  apiUrl: 'https://inkwell-gateway-ub11.onrender.com'
 };

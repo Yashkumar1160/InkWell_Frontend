@@ -104,21 +104,21 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         this.isSaving = false;
-        alert('Failed to update password. Check your current password.');
+        alert(err.error?.message || 'Failed to update password. Check your current password.');
       }
     });
   }
 
-  updateNewsletterPrefs(frequency: string): void {
+  updateNewsletterPrefs(preferences: string): void {
     this.isSaving = true;
-    this.newsletterService.updateMyPreferences({ frequency }).subscribe({
+    this.newsletterService.updateMyPreferences({ preferences }).subscribe({
       next: () => {
         this.isSaving = false;
         alert('Newsletter preferences updated!');
       },
-      error: () => {
+      error: (err) => {
         this.isSaving = false;
-        alert('Failed to update preferences.');
+        alert(err.error?.message || 'Failed to update preferences.');
       }
     });
   }

@@ -42,12 +42,14 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.authService.currentUser$.subscribe(user => {
       if (user) {
-        this.notificationService.getUnreadCount().subscribe(res => {
-          this.unreadCount = res.count;
-        });
+        this.notificationService.refreshUnreadCount();
       } else {
         this.unreadCount = 0;
       }
+    });
+
+    this.notificationService.unreadCount$.subscribe(count => {
+      this.unreadCount = count;
     });
   }
 

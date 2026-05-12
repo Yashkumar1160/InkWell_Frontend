@@ -167,3 +167,28 @@ td {
 .action-btn.delete:hover {
   color: #ef4444;
 }
+
+.search-toggle {
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.toggle-container input {
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+.toggle-label {
+  font-weight: 500;
+}

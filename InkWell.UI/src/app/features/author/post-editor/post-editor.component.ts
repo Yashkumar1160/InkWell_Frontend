@@ -106,8 +106,14 @@ export class PostEditorComponent implements OnInit, AfterViewInit {
     const index = this.selectedCategories.indexOf(id);
     if (index > -1) {
       this.selectedCategories.splice(index, 1);
+      if (this.isEditMode && this.postId) {
+        this.categoryService.removeCategoryFromPost(this.postId, id).subscribe();
+      }
     } else {
       this.selectedCategories.push(id);
+      if (this.isEditMode && this.postId) {
+        this.categoryService.assignCategoryToPost(this.postId, id).subscribe();
+      }
     }
   }
 
