@@ -90,6 +90,7 @@ export class CommentSectionComponent implements OnInit {
         this.comments.unshift(comment);
         this.newCommentContent = '';
         this.isSubmitting = false;
+        // alert('Comment posted successfully!'); // Optional: user feedback
       },
       error: () => this.isSubmitting = false
     });
