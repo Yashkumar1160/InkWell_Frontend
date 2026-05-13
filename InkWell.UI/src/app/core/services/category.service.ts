@@ -88,4 +88,12 @@ export class CategoryService {
   getCategoriesByPost(postId: number): Observable<CategoryResponseDTO[]> {
     return this.http.get<CategoryResponseDTO[]>(`${this.apiUrl}/post/${postId}`);
   }
+
+  getPostIdsByCategorySlug(slug: string): Observable<number[]> {
+    return this.http.get<number[]>(`${this.apiUrl}/slug/${slug}/posts`);
+  }
+
+  getPostIdsByTagSlug(slug: string): Observable<number[]> {
+    return this.http.get<number[]>(`${this.apiUrl}/tag/slug/${slug}/posts`);
+  }
 }

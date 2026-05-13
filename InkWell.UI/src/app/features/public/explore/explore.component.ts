@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable, forkJoin } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LucideAngularModule, Search, Grid, List as ListIcon, Filter } from 'lucide-angular';
@@ -54,11 +55,45 @@ export class ExploreComponent implements OnInit {
   }
 
   onSearch(event: any) {
-    const keyword = event.target.value;
+    const keyword = event.target.value.toLowerCase();
     if (keyword.length > 2) {
       this.selectedFilter = `Results for "${keyword}"`;
-      this.postService.searchPosts(keyword).subscribe(data => {
-        this.posts = data;
+      this.loading = true;
+
+      // 1. Title search
+      this.postService.searchPosts(keyword).subscribe(titleResults => {
+        let finalResults = [...titleResults];
+
+        // 2. Category check
+        const matchedCats = this.categories.filter(c => c.name.toLowerCase().includes(keyword));
+        
+        // 3. Tag check
+        const matchedTags = this.trendingTags.filter(t => t.name.toLowerCase().includes(keyword));
+
+        // If we have category/tag matches, we need to fetch those IDs too
+        if (matchedCats.length > 0 || matchedTags.length > 0) {
+           const obs: Observable<number[]>[] = [];
+           matchedCats.forEach(c => obs.push(this.categoryService.getPostIdsByCategorySlug(c.slug)));
+           matchedTags.forEach(t => obs.push(this.categoryService.getPostIdsByTagSlug(t.slug)));
+
+           if (obs.length > 0) {
+             forkJoin(obs).subscribe(idArrays => {
+               const allIds = new Set<number>();
+               idArrays.forEach(ids => ids.forEach(id => allIds.add(id)));
+               
+               // Add posts from id matches that aren't already in title results
+               const extraPosts = this.allPosts.filter(p => allIds.has(p.postId) && !finalResults.some(fr => fr.postId === p.postId));
+               this.posts = [...finalResults, ...extraPosts];
+               this.loading = false;
+             });
+           } else {
+             this.posts = finalResults;
+             this.loading = false;
+           }
+        } else {
+          this.posts = finalResults;
+          this.loading = false;
+        }
       });
     } else if (keyword.length === 0) {
       this.posts = this.allPosts;
@@ -73,10 +108,11 @@ export class ExploreComponent implements OnInit {
       this.categoryService.getChildCategories(cat.categoryId).subscribe(children => {
         this.subCategories = children;
       });
-      // Client-side filtering as placeholder since no backend endpoint exists
-      // Assuming posts might have category data in the future or we just fake the UI response
-      this.posts = this.allPosts; // In reality this would filter if PostDTO had category data
-      this.loading = false;
+      
+      this.categoryService.getPostIdsByCategorySlug(slug).subscribe(ids => {
+        this.posts = this.allPosts.filter(p => ids.includes(p.postId));
+        this.loading = false;
+      });
     });
   }
 
@@ -85,9 +121,11 @@ export class ExploreComponent implements OnInit {
     this.categoryService.getTagBySlug(slug).subscribe(tag => {
       this.selectedFilter = `Tag: #${tag.name}`;
       this.subCategories = [];
-      // Client-side filtering as placeholder
-      this.posts = this.allPosts;
-      this.loading = false;
+      
+      this.categoryService.getPostIdsByTagSlug(slug).subscribe(ids => {
+        this.posts = this.allPosts.filter(p => ids.includes(p.postId));
+        this.loading = false;
+      });
     });
   }
 }

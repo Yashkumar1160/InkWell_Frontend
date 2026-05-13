@@ -57,12 +57,6 @@ export class NavbarComponent implements OnInit {
     this.showDropdown = !this.showDropdown;
   }
 
-  onSearch(event: any) {
-    const query = event.target.value;
-    if (query.trim()) {
-      this.router.navigate(['/explore'], { queryParams: { q: query } });
-    }
-  }
 
   logout() {
     this.authService.logout();
