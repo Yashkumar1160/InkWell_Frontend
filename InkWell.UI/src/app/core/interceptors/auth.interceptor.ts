@@ -29,20 +29,19 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
         }
 
         return authService.refreshToken(token).pipe(
+          // catchError BEFORE switchMap: only catches refresh failures
+          // If refresh fails → the token is truly invalid → log out
+          catchError(() => {
+            authService.clearSessionAndRedirect();
+            return throwError(() => error);
+          }),
+          // switchMap only runs if refresh SUCCEEDED
+          // If the retry also fails → error propagates normally WITHOUT logging out
           switchMap(newAuth => {
             const retryReq = req.clone({
               setHeaders: { Authorization: `Bearer ${newAuth.token}` }
             });
-            // Retry the request — if it fails again, just propagate the error
-            // Do NOT log the user out on a failed retry (the service may be down)
-            return next(retryReq).pipe(
-              catchError(retryError => throwError(() => retryError))
-            );
-          }),
-          catchError(() => {
-            // Only clear session if the REFRESH ITSELF failed (expired/invalid token)
-            authService.clearSessionAndRedirect();
-            return throwError(() => error);
+            return next(retryReq);
           })
         );
       }
