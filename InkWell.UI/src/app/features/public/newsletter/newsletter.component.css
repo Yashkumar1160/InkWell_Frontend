@@ -82,3 +82,36 @@ p {
 .success-message h2 {
   margin-bottom: 1rem;
 }
+
+.input-info {
+  background: rgba(0,0,0,0.02);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px dashed var(--border);
+  margin-bottom: 1rem;
+}
+
+.input-info p {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.email-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--primary);
+  color: white;
+  border-radius: 2rem;
+  font-size: 0.875rem !important;
+  font-weight: 500;
+}
+
+.login-prompt {
+  padding: 2rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.login-prompt p {
+  margin-bottom: 1.5rem;
+}

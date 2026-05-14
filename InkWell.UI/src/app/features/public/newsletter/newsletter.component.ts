@@ -16,6 +16,7 @@ export class NewsletterComponent {
   email = '';
   fullName = '';
   subscribed = false;
+  isLoggedIn = false;
 
   readonly MailIcon = Mail;
   readonly ArrowRightIcon = ArrowRight;
@@ -26,6 +27,7 @@ export class NewsletterComponent {
     private authService: AuthService
   ) {
     this.authService.currentUser$.subscribe(user => {
+      this.isLoggedIn = !!user;
       if (user) {
         this.email = user.email;
         this.fullName = user.fullName || user.username;

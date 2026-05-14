@@ -34,9 +34,16 @@
       <div class="footer-newsletter">
         <h4>Subscribe</h4>
         <p>Get the latest stories sent to your inbox.</p>
-        <div class="newsletter-form">
-          <input type="email" placeholder="Email address">
-          <button class="btn-icon"><lucide-icon [name]="Mail"></lucide-icon></button>
+        
+        <div *ngIf="!isLoggedIn" class="footer-auth-prompt">
+          <a routerLink="/login" class="btn-primary btn-sm">Login to Subscribe</a>
+        </div>
+
+        <div *ngIf="isLoggedIn" class="newsletter-form">
+          <p class="footer-user-email">{{userEmail}}</p>
+          <button class="btn-icon" (click)="subscribe()" [disabled]="isSubscribing">
+            <lucide-icon [name]="Mail"></lucide-icon>
+          </button>
         </div>
       </div>
     </div>
