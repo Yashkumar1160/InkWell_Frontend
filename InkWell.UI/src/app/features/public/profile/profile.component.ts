@@ -122,4 +122,20 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
+
+  unsubscribe(): void {
+    if (!confirm('Are you sure you want to unsubscribe from all newsletter updates?')) return;
+
+    this.isSaving = true;
+    this.newsletterService.unsubscribeMe().subscribe({
+      next: () => {
+        this.isSaving = false;
+        alert('You have been unsubscribed from the newsletter.');
+      },
+      error: (err) => {
+        this.isSaving = false;
+        alert(err.error?.message || 'Failed to unsubscribe. You might not have an active subscription.');
+      }
+    });
+  }
 }

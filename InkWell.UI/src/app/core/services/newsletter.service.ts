@@ -32,4 +32,8 @@ export class NewsletterService {
   updateMyPreferences(preferences: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/my-preferences`, preferences);
   }
+
+  unsubscribeMe(): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/my-subscription`);
+  }
 }

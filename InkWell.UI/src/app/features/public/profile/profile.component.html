@@ -106,6 +106,14 @@
                <button class="btn-outline" (click)="updateNewsletterPrefs('WEEKLY')">Weekly Roundup</button>
                <button class="btn-outline" (click)="updateNewsletterPrefs('MONTHLY')">Monthly Highlights</button>
             </div>
+            
+            <div class="unsubscribe-section">
+              <hr>
+              <p>No longer want to receive our newsletter?</p>
+              <button class="btn-danger-outline" (click)="unsubscribe()" [disabled]="isSaving">
+                Unsubscribe from all emails
+              </button>
+            </div>
           </div>
         </section>
       </div>

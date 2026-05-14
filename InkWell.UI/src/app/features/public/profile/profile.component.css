@@ -164,3 +164,34 @@ label {
   color: var(--primary);
   background: rgba(99, 102, 241, 0.05);
 }
+
+.unsubscribe-section {
+  margin-top: 1rem;
+}
+
+.unsubscribe-section hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+.btn-danger-outline {
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid #fee2e2;
+  background: transparent;
+  color: #dc2626;
+  font-weight: 500;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.btn-danger-outline:hover:not(:disabled) {
+  background: #fef2f2;
+  border-color: #fca5a5;
+}
+
+.btn-danger-outline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
