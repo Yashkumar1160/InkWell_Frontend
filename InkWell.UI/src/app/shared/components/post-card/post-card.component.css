@@ -31,10 +31,17 @@
   transition: opacity 0.3s ease;
 }
 
-.post-card .post-image .category-badge {
+.post-card .post-image .category-badges {
   position: absolute;
   top: 1rem;
   left: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.post-card .post-image .category-badge {
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(4px);
   color: var(--text-main);
@@ -44,7 +51,12 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.post-card .post-image .category-badge.uncategorized {
+  background: rgba(241, 245, 249, 0.9);
+  color: #64748b;
 }
 
 .post-card .post-body {

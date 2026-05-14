@@ -6,7 +6,10 @@
       loading="lazy"
     >
     <div class="overlay"></div>
-    <div class="category-badge">Technology</div>
+    <div class="category-badges">
+      <div class="category-badge" *ngFor="let cat of categories">{{cat.name}}</div>
+      <div class="category-badge uncategorized" *ngIf="categories.length === 0">General</div>
+    </div>
   </div>
   <div class="post-body">
     <h3 class="title">{{post.title}}</h3>
