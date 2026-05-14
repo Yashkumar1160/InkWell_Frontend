@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { LucideAngularModule, Twitter, Github, Linkedin, Mail, Heart } from 'lucide-angular';
+import { LucideAngularModule, Twitter, Github, Linkedin, Mail, Heart, CheckCircle, AlertCircle } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
 import { NewsletterService } from '../../../core/services/newsletter.service';
 
@@ -18,11 +18,15 @@ export class FooterComponent implements OnInit {
   readonly Linkedin = Linkedin;
   readonly Mail = Mail;
   readonly Heart = Heart;
+  readonly CheckCircle = CheckCircle;
+  readonly AlertCircle = AlertCircle;
 
   isLoggedIn = false;
   userEmail = '';
   userName = '';
   isSubscribing = false;
+  subscribeMessage = '';
+  isSuccess = false;
 
   constructor(
     private authService: AuthService,
@@ -43,14 +47,20 @@ export class FooterComponent implements OnInit {
     if (!this.isLoggedIn) return;
 
     this.isSubscribing = true;
+    this.subscribeMessage = '';
+    
     this.newsletterService.subscribe(this.userEmail, this.userName, this.authService.currentUserValue?.userId).subscribe({
-      next: () => {
+      next: (res) => {
         this.isSubscribing = false;
-        alert('Thank you for subscribing!');
+        this.isSuccess = true;
+        this.subscribeMessage = res.message || 'Thank you for subscribing!';
+        setTimeout(() => this.subscribeMessage = '', 5000);
       },
       error: (err) => {
         this.isSubscribing = false;
-        alert(err.error?.message || 'Failed to subscribe.');
+        this.isSuccess = false;
+        this.subscribeMessage = err.error?.message || 'Failed to subscribe.';
+        setTimeout(() => this.subscribeMessage = '', 5000);
       }
     });
   }
