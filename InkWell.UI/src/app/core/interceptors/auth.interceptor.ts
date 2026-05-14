@@ -10,9 +10,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
   let authReq = req;
   if (token) {
     authReq = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
+      setHeaders: { Authorization: `Bearer ${token}` }
     });
   }
 
@@ -35,12 +33,16 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
             const retryReq = req.clone({
               setHeaders: { Authorization: `Bearer ${newAuth.token}` }
             });
-            return next(retryReq);
+            // Retry the request — if it fails again, just propagate the error
+            // Do NOT log the user out on a failed retry (the service may be down)
+            return next(retryReq).pipe(
+              catchError(retryError => throwError(() => retryError))
+            );
           }),
-          catchError(refreshError => {
-            // Don't make an HTTP call — just clear local state silently
+          catchError(() => {
+            // Only clear session if the REFRESH ITSELF failed (expired/invalid token)
             authService.clearSessionAndRedirect();
-            return throwError(() => refreshError);
+            return throwError(() => error);
           })
         );
       }
