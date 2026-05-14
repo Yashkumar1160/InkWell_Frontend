@@ -47,20 +47,27 @@ export class AuthService {
   }
 
   logout(): void {
-    this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
-      complete: () => this.clearSession(),
-      error: () => this.clearSession()   // always clear even if server errors
-    });
-  }
-  getToken(): string | null {
-    return localStorage.getItem('token');
+    // Fire-and-forget the server-side logout (don't wait for result)
+    const token = this.getToken();
+    if (token) {
+      this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
+        complete: () => {},
+        error: () => {}  // Ignore errors — local session is cleared below
+      });
+    }
+    this.clearSessionAndRedirect();
   }
 
-  private clearSession(): void {
+  /** Clears local session without making an HTTP call. Used by the interceptor. */
+  clearSessionAndRedirect(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 
   isLoggedIn(): boolean {
@@ -86,7 +93,6 @@ export class AuthService {
       tap(response => {
         const currentUser = this.currentUserSubject.value;
         if (currentUser) {
-          // Merge current user, sent data, and response data
           const updatedUser = { ...currentUser, ...profileData, ...response };
           localStorage.setItem('user', JSON.stringify(updatedUser));
           this.currentUserSubject.next(updatedUser);
@@ -122,7 +128,9 @@ export class AuthService {
         this.currentUserSubject.next(JSON.parse(userJson));
       } catch (e) {
         console.error('Failed to parse user from localStorage', e);
-        this.logout();
+        // Clear storage silently without HTTP call
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
       }
     }
   }

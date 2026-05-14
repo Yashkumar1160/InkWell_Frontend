@@ -20,6 +20,16 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401 && token) {
         const authService = injector.get(AuthService);
+
+        // Skip token refresh for auth endpoints to prevent infinite loops
+        const isAuthEndpoint = req.url.includes('/auth/refresh') ||
+                               req.url.includes('/auth/logout') ||
+                               req.url.includes('/auth/validate');
+        if (isAuthEndpoint) {
+          authService.clearSessionAndRedirect();
+          return throwError(() => error);
+        }
+
         return authService.refreshToken(token).pipe(
           switchMap(newAuth => {
             const retryReq = req.clone({
@@ -28,7 +38,8 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
             return next(retryReq);
           }),
           catchError(refreshError => {
-            authService.logout();
+            // Don't make an HTTP call — just clear local state silently
+            authService.clearSessionAndRedirect();
             return throwError(() => refreshError);
           })
         );

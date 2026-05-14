@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap, catchError, EMPTY } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -14,10 +14,18 @@ export class NotificationService {
 
   constructor(private http: HttpClient) { }
 
+  /** Fetches unread count from server. Silently ignores errors (e.g. 401). */
   refreshUnreadCount(): void {
-    this.http.get<{ count: number }>(`${this.apiUrl}/unread-count`).subscribe(res => {
+    this.http.get<{ count: number }>(`${this.apiUrl}/unread-count`).pipe(
+      catchError(() => EMPTY) // Swallow any error — don't throw, don't loop
+    ).subscribe(res => {
       this.unreadCountSubject.next(res.count);
     });
+  }
+
+  /** Resets the count locally without an API call. Used on logout. */
+  resetUnreadCount(): void {
+    this.unreadCountSubject.next(0);
   }
 
   getUnreadCount(): Observable<{ count: number }> {
@@ -56,4 +64,3 @@ export class NotificationService {
     return this.http.get<any[]>(`${this.apiUrl}/unread`);
   }
 }
-
