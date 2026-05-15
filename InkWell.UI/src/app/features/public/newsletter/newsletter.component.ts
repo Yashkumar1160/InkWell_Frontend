@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Mail, CheckCircle, ArrowRight } from 'lucide-angular';
+import { RouterModule } from '@angular/router';
 import { NewsletterService } from '../../../core/services/newsletter.service';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-newsletter',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule, RouterModule],
   templateUrl: './newsletter.component.html',
   styleUrl: './newsletter.component.css'
 })

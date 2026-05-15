@@ -134,4 +134,10 @@ export class AuthService {
       }
     }
   }
+
+  googleLogin(idToken: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/google-login`, JSON.stringify(idToken), {
+      headers: { 'Content-Type': 'application/json' }
+    }).pipe(tap(response => this.handleAuth(response)));
+  }
 }
