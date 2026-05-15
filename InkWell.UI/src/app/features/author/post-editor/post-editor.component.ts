@@ -2,6 +2,8 @@ import { Component, OnInit, AfterViewInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, forkJoin, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { PostService } from '../../../core/services/post.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { MediaService } from '../../../core/services/media.service';
@@ -165,48 +167,76 @@ export class PostEditorComponent implements OnInit, AfterViewInit {
     if (this.isEditMode && this.postId) {
       this.postService.updatePost(this.postId, postDto).subscribe({
         next: () => {
-          this.syncTaxonomy(this.postId!);
-          this.afterSave(status);
+          this.syncTaxonomy(this.postId!).subscribe({
+            next: () => this.afterSave(status),
+            error: () => {
+              this.isSubmitting = false;
+              alert('Post updated, but failed to sync categories/tags.');
+            }
+          });
         },
         error: () => this.isSubmitting = false
       });
     } else {
       this.postService.createPost(postDto).subscribe({
         next: (newPost) => {
-          this.syncTaxonomy(newPost.postId);
-          if (status === 'PUBLISHED') {
-            this.postService.publishPost(newPost.postId).subscribe(() => this.afterSave(status));
-          } else {
-            this.afterSave(status);
-          }
+          this.syncTaxonomy(newPost.postId).subscribe({
+            next: () => {
+              if (status === 'PUBLISHED') {
+                this.postService.publishPost(newPost.postId).subscribe(() => this.afterSave(status));
+              } else {
+                this.afterSave(status);
+              }
+            },
+            error: () => {
+              this.isSubmitting = false;
+              alert('Post created, but failed to sync categories/tags.');
+            }
+          });
         },
         error: () => this.isSubmitting = false
       });
     }
   }
 
-  private syncTaxonomy(postId: number): void {
+  private syncTaxonomy(postId: number): Observable<any> {
+    const operations: Observable<any>[] = [];
+
+    // Categories
     this.selectedCategories.forEach(catId => {
-      this.categoryService.assignCategoryToPost(postId, catId).subscribe();
+      operations.push(this.categoryService.assignCategoryToPost(postId, catId));
     });
 
+    // Tags
     this.currentTags.forEach((tagName: string) => {
-      this.categoryService.getAllTags().subscribe(allTags => {
-        const existingTag = allTags.find(t => t.name.toLowerCase() === tagName.toLowerCase());
-        if (existingTag) {
-          this.categoryService.addTagToPost(postId, existingTag.tagId).subscribe();
-        } else {
-          this.categoryService.createTag({ name: tagName }).subscribe(newTag => {
-            this.categoryService.addTagToPost(postId, newTag.tagId).subscribe();
-          });
-        }
-      });
+      // This is a bit complex because we might need to create the tag first
+      // For simplicity in this sync, we'll just push them
+      // In a real app, this should be handled by the Category Service in one go
+      const tagObs = this.categoryService.getAllTags().pipe(
+        switchMap(allTags => {
+          const existingTag = allTags.find(t => t.name.toLowerCase() === tagName.toLowerCase());
+          if (existingTag) {
+            return this.categoryService.addTagToPost(postId, existingTag.tagId);
+          } else {
+            return this.categoryService.createTag({ name: tagName }).pipe(
+              switchMap(newTag => this.categoryService.addTagToPost(postId, newTag.tagId))
+            );
+          }
+        })
+      );
+      operations.push(tagObs);
     });
 
-    // Link featured image to post if one was newly uploaded
+    // Link featured image
     if (this.featuredMediaId) {
-      this.mediaService.linkToPost(this.featuredMediaId, postId).subscribe();
+      operations.push(this.mediaService.linkToPost(this.featuredMediaId, postId));
     }
+
+    if (operations.length === 0) {
+      return of(true);
+    }
+
+    return forkJoin(operations);
   }
 
   afterSave(status: string): void {
