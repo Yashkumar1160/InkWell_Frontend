@@ -62,10 +62,14 @@ export class LoginComponent implements OnInit {
   private renderGoogleButton() {
     if (typeof google === 'undefined') return;
 
-    google.accounts.id.initialize({
-      client_id: '312598885948-ctk5vvebe4fm391rdtsdi8gn6t2v496r.apps.googleusercontent.com',
-      callback: (response: any) => this.handleGoogleLogin(response)
-    });
+    // Only initialize once per session to avoid GSI_LOGGER warnings
+    if (!(window as any).google_initialized) {
+      google.accounts.id.initialize({
+        client_id: '312598885948-ctk5vvebe4fm391rdtsdi8gn6t2v496r.apps.googleusercontent.com',
+        callback: (response: any) => this.handleGoogleLogin(response)
+      });
+      (window as any).google_initialized = true;
+    }
 
     google.accounts.id.renderButton(
       document.getElementById('google-btn'),

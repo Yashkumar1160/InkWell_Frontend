@@ -32,6 +32,14 @@ export class NewsletterComponent {
       if (user) {
         this.email = user.email;
         this.fullName = user.fullName || user.username;
+        
+        // If fullName is missing or same as username, try to fetch fresh profile
+        if (!user.fullName || user.fullName === user.username) {
+          this.authService.fetchCurrentUser().subscribe(freshUser => {
+            this.fullName = freshUser.fullName || freshUser.username;
+          });
+        }
+        
         this.checkSubscriptionStatus();
       }
     });
