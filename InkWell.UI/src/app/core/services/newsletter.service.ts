@@ -36,4 +36,8 @@ export class NewsletterService {
   unsubscribeMe(): Observable<any> {
     return this.http.delete(`${this.apiUrl}/my-subscription`);
   }
+
+  getMySubscription(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/my-subscription`);
+  }
 }

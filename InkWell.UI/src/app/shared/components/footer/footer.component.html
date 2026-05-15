@@ -40,12 +40,16 @@
         </div>
 
         <div *ngIf="isLoggedIn" class="newsletter-form-container">
-          <div class="newsletter-form">
+          <div class="newsletter-form" *ngIf="!isSubscribed">
             <p class="footer-user-email">{{userEmail}}</p>
             <button class="btn-icon" (click)="subscribe()" [disabled]="isSubscribing">
-              <lucide-icon [name]="isSubscribing ? Mail : Mail"></lucide-icon>
-              {{ isSubscribing ? '...' : '' }}
+              <lucide-icon [name]="Mail"></lucide-icon>
             </button>
+          </div>
+
+          <div class="subscribed-badge" *ngIf="isSubscribed">
+            <lucide-icon [name]="CheckCircle" [size]="14"></lucide-icon>
+            <span>Subscribed</span>
           </div>
           
           <div *ngIf="subscribeMessage" class="subscribe-feedback" [class.success]="isSuccess" [class.error]="!isSuccess">

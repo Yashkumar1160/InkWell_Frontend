@@ -31,6 +31,20 @@ export class NewsletterComponent {
       if (user) {
         this.email = user.email;
         this.fullName = user.fullName || user.username;
+        this.checkSubscriptionStatus();
+      }
+    });
+  }
+
+  checkSubscriptionStatus() {
+    this.newsletterService.getMySubscription().subscribe({
+      next: (sub) => {
+        if (sub && sub.status === 'ACTIVE') {
+          this.subscribed = true;
+        }
+      },
+      error: () => {
+        this.subscribed = false;
       }
     });
   }

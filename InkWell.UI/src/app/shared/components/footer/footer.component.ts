@@ -27,6 +27,7 @@ export class FooterComponent implements OnInit {
   isSubscribing = false;
   subscribeMessage = '';
   isSuccess = false;
+  isSubscribed = false;
 
   constructor(
     private authService: AuthService,
@@ -39,6 +40,18 @@ export class FooterComponent implements OnInit {
       if (user) {
         this.userEmail = user.email;
         this.userName = user.fullName || user.username;
+        this.checkSubscriptionStatus();
+      }
+    });
+  }
+
+  checkSubscriptionStatus() {
+    this.newsletterService.getMySubscription().subscribe({
+      next: (sub) => {
+        this.isSubscribed = sub && sub.status === 'ACTIVE';
+      },
+      error: () => {
+        this.isSubscribed = false;
       }
     });
   }
