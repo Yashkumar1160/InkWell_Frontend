@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
     if (typeof google === 'undefined') return;
 
     google.accounts.id.initialize({
-      client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Replace with your Client ID
+      client_id: '312598885948-ctk5vvebe4fm391rdtsdi8gn6t2v496r.apps.googleusercontent.com',
       callback: (response: any) => this.handleGoogleLogin(response)
     });
 
