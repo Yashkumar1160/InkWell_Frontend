@@ -92,6 +92,11 @@ export class PostEditorComponent implements OnInit, AfterViewInit {
         this.currentTags = tags.map(t => t.name);
       });
 
+      // Load assigned categories
+      this.categoryService.getCategoriesByPost(id).subscribe(cats => {
+        this.selectedCategories = cats.map(c => c.categoryId);
+      });
+
       if (this.quill) {
         this.quill.root.innerHTML = post.content;
       } else {
