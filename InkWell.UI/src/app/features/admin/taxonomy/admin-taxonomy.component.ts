@@ -42,9 +42,12 @@ export class AdminTaxonomyComponent implements OnInit {
       name: this.newCategory,
       parentCategoryId: this.selectedParentId 
     };
-    this.categoryService.createCategory(dto).subscribe(() => {
+    this.categoryService.createCategory(dto).subscribe((savedCategory: any) => {
+      // Append the new category locally for instant feedback
+      this.categories = [...this.categories, savedCategory];
       this.newCategory = '';
       this.selectedParentId = undefined;
+      // Also trigger a background load to be safe
       this.loadAll();
     });
   }
@@ -71,8 +74,11 @@ export class AdminTaxonomyComponent implements OnInit {
 
   addTag(): void {
     if (!this.newTag) return;
-    this.categoryService.createTag({ name: this.newTag }).subscribe(() => {
+    this.categoryService.createTag({ name: this.newTag }).subscribe((savedTag: any) => {
+      // Append the new tag locally for instant feedback
+      this.tags = [...this.tags, savedTag];
       this.newTag = '';
+      // Also trigger a background load to be safe
       this.loadAll();
     });
   }
