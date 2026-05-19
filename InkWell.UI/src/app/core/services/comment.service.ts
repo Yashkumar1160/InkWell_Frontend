@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, shareReplay, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CommentResponseDTO } from '../models/comment.model';
 
@@ -24,12 +24,22 @@ export class CommentService {
     return this.http.get<CommentResponseDTO[]>(`${this.apiUrl}/replies/${parentCommentId}`);
   }
 
+  private commentCountCache = new Map<number, Observable<number>>();
+
+  clearCache(): void {
+    this.commentCountCache.clear();
+  }
+
   addComment(dto: { postId: number, content: string, parentCommentId?: number, postAuthorId?: number }): Observable<CommentResponseDTO> {
-    return this.http.post<CommentResponseDTO>(`${this.apiUrl}/add`, dto);
+    return this.http.post<CommentResponseDTO>(`${this.apiUrl}/add`, dto).pipe(
+      tap(() => this.clearCache())
+    );
   }
 
   deleteComment(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/delete/${id}`);
+    return this.http.delete(`${this.apiUrl}/delete/${id}`).pipe(
+      tap(() => this.clearCache())
+    );
   }
 
   approveComment(id: number): Observable<any> {
@@ -45,9 +55,14 @@ export class CommentService {
   }
 
   getCommentCount(postId: number): Observable<number> {
-    return this.http.get<{ count: number }>(`${this.apiUrl}/count/${postId}`).pipe(
-      map(res => res.count)
-    );
+    if (!this.commentCountCache.has(postId)) {
+      const request$ = this.http.get<{ count: number }>(`${this.apiUrl}/count/${postId}`).pipe(
+        map(res => res.count),
+        shareReplay(1)
+      );
+      this.commentCountCache.set(postId, request$);
+    }
+    return this.commentCountCache.get(postId)!;
   }
 
   unlikeComment(id: number): Observable<any> {

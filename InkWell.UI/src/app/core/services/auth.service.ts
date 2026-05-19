@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, shareReplay } from 'rxjs';
 import { AuthResponse, User } from '../models/auth.model';
 import { environment } from '../../../environments/environment';
 
@@ -105,8 +105,16 @@ export class AuthService {
     return this.http.put(`${this.apiUrl}/password`, passwordData);
   }
 
+  private publicProfileCache = new Map<number, Observable<any>>();
+
   getPublicProfile(userId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/profile/${userId}`);
+    if (!this.publicProfileCache.has(userId)) {
+      const request$ = this.http.get<any>(`${this.apiUrl}/profile/${userId}`).pipe(
+        shareReplay(1)
+      );
+      this.publicProfileCache.set(userId, request$);
+    }
+    return this.publicProfileCache.get(userId)!;
   }
 
   refreshToken(token: string): Observable<AuthResponse> {
